@@ -15,7 +15,7 @@ jobs:
           PR_BRANCH="${{ github.head_ref }}"
           echo "Nome da branch de origem do PR: $PR_BRANCH"
           
-          # Verificar se a branch segue o padrão '*/'
+          # Verificar se a branch segue o padrão '*/*'
           if [[ "$PR_BRANCH" != */* ]]; then
             echo "::error::A branch '$PR_BRANCH' não segue o padrão '*/'. Use 'feature/', 'bugfix/', etc."
             exit 1
