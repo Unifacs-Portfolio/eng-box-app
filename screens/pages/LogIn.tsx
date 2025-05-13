@@ -110,7 +110,7 @@ export default function LogIn() {
 						{/*Wellcome*/}
 						<Text
 							style={{ fontFamily: 'poppins-bold' }}
-							className="text-[#5A5A5A] mb-3 text-2xl ml-2"
+							className="text-[#5A5A5A] mb-2 text-2xl ml-2"
 						>
 							Bem-vindo de Volta!
 						</Text>
@@ -123,7 +123,7 @@ export default function LogIn() {
 
 						{/*Input User*/}
 
-						<View className="w-full mb-4">
+						<View className="w-full mb-6 h-24">
 							<View className="flex-row items-center mb-2 mr-5 ">
 								<Ionicons name="person-sharp" size={20} color={'#5A5A5A'} />
 
@@ -165,7 +165,7 @@ export default function LogIn() {
 										{error && (
 											<Text
 												style={{ fontFamily: 'poppins-semi-bold' }}
-												className="text-[#ff375b] text-xs ml-2"
+												className="text-[#ff375b] text-xs ml-2 mt-1"
 											>
 												{error.message}
 											</Text>
@@ -176,7 +176,7 @@ export default function LogIn() {
 						</View>
 
 						{/*Input Password*/}
-						<View className="w-full mb-4 ">
+						<View className="w-full mb-6 h-24">
 							<View className="flex-row items-center mb-2 mr-5 ">
 								<Ionicons name="lock-closed" size={20} color={'#5A5A5A'} />
 								<Text
@@ -229,7 +229,7 @@ export default function LogIn() {
 										{error && (
 											<Text
 												style={{ fontFamily: 'poppins-semi-bold' }}
-												className="text-[#ff375b] text-xs mt-2"
+												className="text-[#ff375b] text-xs ml-2 mt-1"
 											>
 												{error.message}
 											</Text>
@@ -240,9 +240,10 @@ export default function LogIn() {
 						</View>
 
 						{/*Remember me and ForgotPassword */}
-						<View className="w-full flex-row justify-around mb-6">
-							<View className="flex-row items-center">
-								<TouchableOpacity
+						<View className="w-full flex-row mb-6 items-center">
+							<View className="flex-row items-center justify-between w-full">
+								<View className='flex-row items-center gap-2'>
+									<TouchableOpacity
 									className={`shadow-sm w-6 h-6 rounded-sm border-2 ${rememberMe ? 'bg-[#D9D9D9]' : 'bg-white border-[#D9D9D9]'}`}
 									onPress={() => setRememberMe(!rememberMe)}
 								>
@@ -255,20 +256,20 @@ export default function LogIn() {
 											/>
 										</View>
 									)}
-								</TouchableOpacity>
+									</TouchableOpacity>
 
-								<Text
-									className="text-[#767676] ml-1"
+									<Text
+									className="text-[#767676]"
 									style={{ fontFamily: 'poppins-regular' }}
-								>
+									>
 									Lembrar de Mim
-								</Text>
+									</Text>
+								</View>
 								<TouchableOpacity
-									className="ml-6"
 									onPress={() => navigation.navigate('ForgotPassword')}
 								>
 									<Text
-										className="shadow text-sm text-[#5A5A5A] mr-2 underline"
+										className="shadow text-sm text-[#5A5A5A] underline"
 										style={{ fontFamily: 'poppins-regular' }}
 									>
 										Esqueceu sua Senha?
@@ -298,7 +299,10 @@ export default function LogIn() {
 							</View>
 							<TouchableOpacity
 								className="shadow text-[#767676]"
-								onPress={() => navigation.navigate('Register')}
+								onPress={() => {
+									navigation.navigate('Register')
+									reset();
+								}}
 							>
 								<Text
 									className="text-[#5A5A5A] ml-1 underline"

@@ -49,7 +49,7 @@ export default function Wellcome() {
 						Entrar
 					</Text>
 				</TouchableOpacity>
-				<View className="justify-center items-center my-4">
+				<View className="justify-center items-center">
 					<TouchableOpacity onPress={() => navigation.navigate('PrivacyPolicy')}>
 						<Text className="font-semibold ml-1  text-[#09090b]">
 							Politica de privacidade | Termos e condições

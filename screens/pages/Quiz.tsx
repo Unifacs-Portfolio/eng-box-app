@@ -114,7 +114,7 @@ const Quiz = () => {
 			id: '2',
 			question:
 				'Qual é a unidade de medida de tensão no Sistema Internacional (SI)?',
-			option: ['Newton (N)', 'Pascal (Pa)', 'Joule (J)', 'Watt (W)'],
+			option: ['Newton (N)', 'Volt (V)', 'Joule (J)', 'Watt (W)'],
 			correctOption: 1,
 		},
 		{
