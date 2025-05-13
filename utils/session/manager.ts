@@ -8,6 +8,8 @@ export const saveToken = async (token: string) => {
 
 export const getToken = async () => {
 	const token = await SecureStore.getItemAsync('token-session');
+	// código para gerar um token fake para testes
+	// const token: string = "d3f43a7c-8f96-4f77-9fc2-9d8b24bde9f2";
 	return token;
 };
 
