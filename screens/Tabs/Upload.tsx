@@ -28,14 +28,17 @@ import { UserResponse } from '../../utils/types/user-response';
 
 const Upload = () => {
 	const [media, setMedia] = React.useState<string | null>(null);
-	const [mediaType, setMediaType] = React.useState<'image' | 'video' | null>(null);
+	const [mediaType, setMediaType] = React.useState<'image' | 'video' | null>(
+		null,
+	);
 	const [titulo, setTitulo] = React.useState('');
 	const [conteudo, setConteudo] = React.useState('');
 	const [successfulUploadModalVisible, setSuccessfulUploadModalVisible] =
 		React.useState(false);
 	const [loading, setLoading] = useState(true);
 	const [user, setUserProfile] = useState<UserResponse | undefined>(undefined);
-	const [imageErrorModalVisible, setImageErrorModalVisible] = React.useState<boolean>(false);
+	const [imageErrorModalVisible, setImageErrorModalVisible] =
+		React.useState<boolean>(false);
 
 	const navigation = useNavigation<NavigationProp>();
 
@@ -55,7 +58,6 @@ const Upload = () => {
 			formData.append('idUsuario', user?.email ?? '');
 			formData.append('titulo', data.titulo);
 			formData.append('conteudo', data.conteudo);
-			
 
 			const api = await getApiAxios();
 			await api.postForm('/api/receitas', formData);
@@ -85,7 +87,7 @@ const Upload = () => {
 				const token = await getToken();
 				if (!token) {
 					alert('Você precisa realizar o login para acessar!');
-					navigation.navigate('LogIn');
+					navigation.navigate('Login');
 					return;
 				} else {
 					const user = await getUserDetails();
@@ -152,7 +154,8 @@ const Upload = () => {
 		],
 	};
 
-	const isButtonDisabled = !media || titulo.trim() === '' || conteudo.trim() === '';
+	const isButtonDisabled =
+		!media || titulo.trim() === '' || conteudo.trim() === '';
 
 	if (loading) return <Spinner />;
 
@@ -163,7 +166,10 @@ const Upload = () => {
 		>
 			<TouchableWithoutFeedback onPress={Keyboard.dismiss}>
 				<SafeAreaView className="flex-1 bg-[#F9F9F9]">
-					<ScrollView contentContainerStyle={{ flexGrow: 1, paddingBottom: 300 }} className="flex-1">
+					<ScrollView
+						contentContainerStyle={{ flexGrow: 1, paddingBottom: 300 }}
+						className="flex-1"
+					>
 						<View className="items-center mt-4">
 							<View className="w-11/12 bg-[#EDEDED] py-8 rounded-lg shadow-md">
 								{/* Upload Section */}
@@ -187,7 +193,11 @@ const Upload = () => {
 												className="items-center"
 												onPress={pickMedia}
 											>
-												<Ionicons name="add-circle" size={60} color="#00000050" />
+												<Ionicons
+													name="add-circle"
+													size={60}
+													color="#00000050"
+												/>
 												<Text
 													className="text-base text-[#767676]"
 													style={{ fontFamily: 'poppins-medium' }}
@@ -235,8 +245,7 @@ const Upload = () => {
 								</View>
 							</View>
 						</View>
-
-					</ScrollView >
+					</ScrollView>
 					{/* Modal de sucesso */}
 					<Modal
 						transparent={true}
@@ -276,21 +285,35 @@ const Upload = () => {
 						</View>
 					</Modal>
 					{/* Modal de "Error na imagem" */}
-					<Modal transparent={true} visible={imageErrorModalVisible} animationType="fade" onRequestClose={() => setImageErrorModalVisible(false)}>
+					<Modal
+						transparent={true}
+						visible={imageErrorModalVisible}
+						animationType="fade"
+						onRequestClose={() => setImageErrorModalVisible(false)}
+					>
 						<View className="flex-1 justify-center items-center bg-[#00000050]">
 							<View className="bg-white w-4/5 px-6 py-4 rounded-xl items-center shadow-md">
 								<Ionicons name="alert-circle" size={60} color="#E53E3E" />
-								<Text className="text-lg text-[#767676] text-center mt-4" style={{ fontFamily: 'poppins-medium' }}>
+								<Text
+									className="text-lg text-[#767676] text-center mt-4"
+									style={{ fontFamily: 'poppins-medium' }}
+								>
 									Imagem muito grande!
 								</Text>
-								<Text className="text-base text-[#767676] text-center my-4" style={{ fontFamily: 'poppins-regular' }}>
+								<Text
+									className="text-base text-[#767676] text-center my-4"
+									style={{ fontFamily: 'poppins-regular' }}
+								>
 									Por favor, selecione uma imagem com menos de 5MB.
 								</Text>
 								<TouchableOpacity
 									onPress={() => setImageErrorModalVisible(false)}
 									className="bg-[#767676] w-full py-3 items-center justify-center rounded-md shadow-md"
 								>
-									<Text className="text-white text-base" style={{ fontFamily: 'poppins-medium' }}>
+									<Text
+										className="text-white text-base"
+										style={{ fontFamily: 'poppins-medium' }}
+									>
 										Entendi
 									</Text>
 								</TouchableOpacity>
@@ -299,7 +322,7 @@ const Upload = () => {
 					</Modal>
 				</SafeAreaView>
 			</TouchableWithoutFeedback>
-		</KeyboardAvoidingView >
+		</KeyboardAvoidingView>
 	);
 };
 

@@ -17,7 +17,7 @@ export type RootStackParamList = {
 	Wellcome: undefined;
 	Main: undefined;
 	PrivacyPolicy: undefined;
-	LogIn: undefined;
+	Login: undefined;
 	ForgotPassword: undefined;
 	Register: undefined;
 	Quiz: undefined;

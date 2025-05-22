@@ -43,7 +43,7 @@ export default function Register() {
 
 			alert('Conta criada com sucesso!');
 			reset();
-			navigation.navigate('LogIn');
+			navigation.navigate('Login');
 		} catch (error: any) {
 			if (error.response) {
 				const { status, data: errorData } = error.response;
@@ -360,7 +360,7 @@ export default function Register() {
 						<TouchableOpacity
 							className="shadow text-[#767676]"
 							onPress={() => {
-								navigation.navigate('LogIn')
+								navigation.navigate('Login');
 								reset();
 							}}
 						>

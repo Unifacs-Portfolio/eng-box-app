@@ -24,7 +24,7 @@ import { LoginFormData } from '../../utils/types/form/formData';
 import { NavigationProp } from '../../utils/types/navigation';
 import { TokenResponse } from '../../utils/types/token';
 
-export default function LogIn() {
+export default function Login() {
 	const navigation = useNavigation<NavigationProp>();
 	const [rememberMe, setRememberMe] = useState(false);
 	const { control, handleSubmit, formState, reset } = useForm<LoginFormData>();
@@ -74,6 +74,7 @@ export default function LogIn() {
 	};
 
 	useFocusEffect(
+		// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 		React.useCallback(() => {
 			(async () => {
 				const isRemember = await checkIsRemember();
@@ -242,27 +243,27 @@ export default function LogIn() {
 						{/*Remember me and ForgotPassword */}
 						<View className="w-full flex-row mb-6 items-center">
 							<View className="flex-row items-center justify-between w-full">
-								<View className='flex-row items-center gap-2'>
+								<View className="flex-row items-center gap-2">
 									<TouchableOpacity
-									className={`shadow-sm w-6 h-6 rounded-sm border-2 ${rememberMe ? 'bg-[#D9D9D9]' : 'bg-white border-[#D9D9D9]'}`}
-									onPress={() => setRememberMe(!rememberMe)}
-								>
-									{rememberMe && (
-										<View className="w-full h-full bg-[#5A5A5A]">
-											<Ionicons
-												name="checkbox-outline"
-												size={20}
-												color="white"
-											/>
-										</View>
-									)}
+										className={`shadow-sm w-6 h-6 rounded-sm border-2 ${rememberMe ? 'bg-[#D9D9D9]' : 'bg-white border-[#D9D9D9]'}`}
+										onPress={() => setRememberMe(!rememberMe)}
+									>
+										{rememberMe && (
+											<View className="w-full h-full bg-[#5A5A5A]">
+												<Ionicons
+													name="checkbox-outline"
+													size={20}
+													color="white"
+												/>
+											</View>
+										)}
 									</TouchableOpacity>
 
 									<Text
-									className="text-[#767676]"
-									style={{ fontFamily: 'poppins-regular' }}
+										className="text-[#767676]"
+										style={{ fontFamily: 'poppins-regular' }}
 									>
-									Lembrar de Mim
+										Lembrar de Mim
 									</Text>
 								</View>
 								<TouchableOpacity
@@ -300,7 +301,7 @@ export default function LogIn() {
 							<TouchableOpacity
 								className="shadow text-[#767676]"
 								onPress={() => {
-									navigation.navigate('Register')
+									navigation.navigate('Register');
 									reset();
 								}}
 							>

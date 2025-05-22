@@ -25,20 +25,20 @@ const Profile = () => {
 			const api = await getApiAxios();
 			const response = await api.get('/api/Enge/receitas');
 			const userPosts = response.data
-			.filter((posts: Post) => posts.idUsuario === userEmail)
-			.sort((a: Post, b: Post) => new Date(b.dataCriacao).getTime() - new Date(a.dataCriacao).getTime());
-				
-			
-			setUserPostagens(userPosts);
-			console.log('Postagens filtradas', userPosts)
+				.filter((posts: Post) => posts.idUsuario === userEmail)
+				.sort(
+					(a: Post, b: Post) =>
+						new Date(b.dataCriacao).getTime() -
+						new Date(a.dataCriacao).getTime(),
+				);
 
+			setUserPostagens(userPosts);
+			console.log('Postagens filtradas', userPosts);
 		} catch (error) {
 			console.error('Erro ao carregar as postagens:', error);
 			Alert.alert('Erro', 'Não foi possível carregar os dados do perfil.');
-
 		}
 	};
-
 
 	useFocusEffect(
 		React.useCallback(() => {
@@ -47,19 +47,18 @@ const Profile = () => {
 				const token = await getToken();
 				if (!token) {
 					alert('Você precisa realizar o login para acessar!');
-					navigation.navigate('LogIn');
+					navigation.navigate('Login');
 					return;
 				} else {
 					const user = await getUserDetails();
 					setUserProfile(user);
 
 					if (user) {
-						console.log("Buscando postagens...");
+						console.log('Buscando postagens...');
 						await fetchUserPosts(user.email);
 					}
 				}
-				setLoading(false)
-
+				setLoading(false);
 			})();
 			return () => {
 				setLoading(true);

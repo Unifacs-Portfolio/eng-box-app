@@ -19,7 +19,7 @@ type QuizResultProps = {
 	route: QuizResultScreenRouteProp;
 };
 
-const QuizzResult = ({ route }: QuizResultProps) => {
+export default function QuizzResult({ route }: QuizResultProps) {
 	const { score } = route.params;
 	const navigation = useNavigation<NavigationProp>();
 
@@ -88,6 +88,4 @@ const QuizzResult = ({ route }: QuizResultProps) => {
 			</ScrollView>
 		</SafeAreaView>
 	);
-};
-
-export default QuizzResult;
+}

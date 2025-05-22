@@ -20,8 +20,10 @@ const Home = () => {
 		try {
 			const api = await getApiAxios();
 			const response = await api.get('/api/Enge/receitas');
-			const sortedPosts = response.data
-				.sort((a: Post, b: Post) => new Date(b.dataCriacao).getTime() - new Date(a.dataCriacao).getTime())
+			const sortedPosts = response.data.sort(
+				(a: Post, b: Post) =>
+					new Date(b.dataCriacao).getTime() - new Date(a.dataCriacao).getTime(),
+			);
 			setPosts(sortedPosts);
 		} catch (error) {
 			console.error('Erro ao buscar posts:', error);
@@ -38,7 +40,7 @@ const Home = () => {
 				const token = await getToken();
 				if (!token) {
 					alert('Você precisa realizar o login para acessar!');
-					navigation.navigate('LogIn');
+					navigation.navigate('Login');
 					return;
 				}
 
@@ -83,19 +85,18 @@ const HomeHeader = ({ username }: HomeHeaderProps) => {
 		<SafeAreaView>
 			<View className="px-4 flex flex-row my-6 items-center gap-x-3 mb-5 ">
 				<View className=" h-full w-full ">
-					<View className='flex-row items-center justify-between' >
+					<View className="flex-row items-center justify-between">
 						<Image
 							source={require('../../assets/images/login/LogoAppHome.png')}
 						/>
 
 						<TouchableOpacity
-							className='mr-4'
-							onPress={() => navigation.navigate("Menu")}
+							className="mr-4"
+							onPress={() => navigation.navigate('Menu')}
 						>
-							<Ionicons name='menu' size={28} />
+							<Ionicons name="menu" size={28} />
 						</TouchableOpacity>
 					</View>
-
 				</View>
 			</View>
 		</SafeAreaView>

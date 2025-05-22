@@ -44,9 +44,11 @@ const MoreOptions = () => {
 	);
 
 	return (
-		<SafeAreaView className='flex-1'>
-			<ScrollView contentContainerStyle={{ flexGrow: 1, paddingBottom: 300 }} className="flex-1">
-
+		<SafeAreaView className="flex-1">
+			<ScrollView
+				contentContainerStyle={{ flexGrow: 1, paddingBottom: 300 }}
+				className="flex-1"
+			>
 				<GoBackButton title="Opções" />
 				<View className="flex items-center justify-center ">
 					<View className="bg-white w-80 h-32 my-2 rounded-md shadow flex-row items-center justify-center mt-[15%]">

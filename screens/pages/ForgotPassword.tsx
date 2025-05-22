@@ -113,7 +113,7 @@ export default function ForgotPassword() {
 									{error && (
 										<Text
 											style={{ fontFamily: 'poppins-semi-bold' }}
-											className="text-[#ff375b] text-xs ml-2"
+											className="text-[#ff375b] text-xs ml-2 mt-2"
 										>
 											{error.message}
 										</Text>
@@ -138,7 +138,7 @@ export default function ForgotPassword() {
 				<View className="flex-row justify-center items-center mb-4">
 					<TouchableOpacity
 						className="shadow text-[#5A5A5A]"
-						onPress={() => navigation.navigate('LogIn')}
+						onPress={() => navigation.navigate('Login')}
 					>
 						<Text className="text-sm text-[#5A5A5A] ml-1">
 							Aperte Para Voltar

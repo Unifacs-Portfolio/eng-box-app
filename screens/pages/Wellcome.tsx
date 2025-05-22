@@ -11,6 +11,7 @@ export default function Wellcome() {
 	const navigation = useNavigation<NavigationProp>();
 
 	useFocusEffect(
+		// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 		React.useCallback(() => {
 			// Do something when the screen is focused
 			(async () => {
@@ -29,7 +30,7 @@ export default function Wellcome() {
 		<ScrollView>
 			<View className="flex-1 bg-[#F9F9F9]  items-center">
 				<View className="mb-8">
-					<Image source={require("../../assets/images/Eng-Box-Image.png")} />
+					<Image source={require('../../assets/images/Eng-Box-Image.png')} />
 				</View>
 
 				<TouchableOpacity
@@ -43,14 +44,16 @@ export default function Wellcome() {
 
 				<TouchableOpacity
 					className="border border-[#5A5A5A] w-4/5 bg-[#FFFFFF] shadow-lg py-3.5 mb-4 rounded-2xl"
-					onPress={() => navigation.navigate('LogIn')}
+					onPress={() => navigation.navigate('Login')}
 				>
 					<Text className=" text-center border-[#F9F9F9] text-[#5A5A5A] text-xl">
 						Entrar
 					</Text>
 				</TouchableOpacity>
 				<View className="justify-center items-center">
-					<TouchableOpacity onPress={() => navigation.navigate('PrivacyPolicy')}>
+					<TouchableOpacity
+						onPress={() => navigation.navigate('PrivacyPolicy')}
+					>
 						<Text className="font-semibold ml-1  text-[#09090b]">
 							Politica de privacidade | Termos e condições
 						</Text>
@@ -61,7 +64,7 @@ export default function Wellcome() {
 					</Text>
 				</View>
 			</View>
-			<StatusBar  />
+			<StatusBar />
 		</ScrollView>
 	);
 }
