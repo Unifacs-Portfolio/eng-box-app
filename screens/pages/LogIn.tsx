@@ -243,7 +243,7 @@ export default function Login() {
 						{/*Remember me and ForgotPassword */}
 						<View className="w-full flex-row mb-6 items-center">
 							<View className="flex-row items-center justify-between w-full">
-								<View className="flex-row items-center gap-2">
+								<View className="flex flex-row items-center gap-2">
 									<TouchableOpacity
 										className={`shadow-sm w-6 h-6 rounded-sm border-2 ${rememberMe ? 'bg-[#D9D9D9]' : 'bg-white border-[#D9D9D9]'}`}
 										onPress={() => setRememberMe(!rememberMe)}

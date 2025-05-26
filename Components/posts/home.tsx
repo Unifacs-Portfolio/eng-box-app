@@ -10,9 +10,8 @@ type PostProps = {
 };
 
 const PostComponent = ({ post }: PostProps) => {
-	const imageUrl =
-		post.fotos && post.fotos.length > 0 ? post.fotos[0] : "";
-	const [userPost, setUserPost] = useState<UserResponse | null>(null);
+	const imageUrl = post.fotos && post.fotos.length > 0 ? post.fotos[0] : '';
+	const [userPost, setUserPost] = useState<UserResponse | undefined>(undefined);
 	const [isExpanded, setIsExpanded] = useState<boolean>(false);
 	const MAX_LINES = 3;
 
@@ -49,17 +48,14 @@ const PostComponent = ({ post }: PostProps) => {
 					<View className="gap-x-1 flex-row justify-between items-center">
 						<Text
 							className="text-sm"
-							style={{ fontFamily: "poppins-semi-bold" }}>
+							style={{ fontFamily: 'poppins-semi-bold' }}
+						>
 							{userPost?.nome || 'Autor desconhecido'}
 						</Text>
 
 						{userPost?.isMonitor && (
 							<View className="flex-row gap-x-1">
-								<Ionicons
-									name="diamond-outline"
-									size={14}
-									color="black"
-								/>
+								<Ionicons name="diamond-outline" size={14} color="black" />
 								<Text
 									className="text-xs"
 									style={{
@@ -71,7 +67,6 @@ const PostComponent = ({ post }: PostProps) => {
 							</View>
 						)}
 					</View>
-
 				</View>
 			</View>
 
