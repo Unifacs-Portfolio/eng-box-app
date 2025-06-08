@@ -1,5 +1,5 @@
 import { useNavigation } from '@react-navigation/native';
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
 	Image,
 	KeyboardAvoidingView,
@@ -13,7 +13,7 @@ import 'tailwindcss/tailwind.css';
 import { Controller, useForm } from 'react-hook-form';
 import { ScrollView } from 'react-native-gesture-handler';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { axiosLogin } from '../../services/axios';
+import { axiosLogin, PostApiAxios } from '../../services/axios';
 import { getUserDetailsByEmail } from '../../utils/session/user-data';
 import { RegisterFormData } from '../../utils/types/form/formData';
 import { NavigationProp } from '../../utils/types/navigation';
@@ -31,16 +31,19 @@ export default function Register() {
 
 	const handleRegisterFormSubmit = async (data: RegisterFormData) => {
 		try {
-			const { data: message } = await axiosLogin.post('/api/usuario', {
+			const dados = {
 				email: data.email,
+				token: 'abc123xyz',
 				senha: data.password,
 				nome: data.username,
+				telefone: '123456789',
 				nivelConsciencia: 1,
 				isMonitor: false,
-				tokens: `${Math.random()}`,
-				telefone: '123232323',
-			});
+				profilePhotoUrl: 'https://github.com/Sinvalluz.png',
+			};
 
+			const res = await PostApiAxios.post('/api/usuario', dados);
+			console.log('Response from API:', res.data);
 			alert('Conta criada com sucesso!');
 			reset();
 			navigation.navigate('Login');
@@ -56,6 +59,7 @@ export default function Register() {
 					alert('Email já registrado!');
 				} else {
 					alert('Erro ao criar conta');
+					console.error('Erro ao criar conta:', errorData);
 				}
 			}
 		}

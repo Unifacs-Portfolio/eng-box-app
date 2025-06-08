@@ -8,6 +8,7 @@ import { axiosLogin, getApiAxios } from '../../services/axios';
 import { getUserDetails } from '../../utils/session/user-data';
 import { userStore } from '../../utils/stores/user';
 import { RootStackParamList } from '../../utils/types/navigation';
+import { useUser } from '../../Components/profile/UserContext';
 
 // Define o tipo de navegação para o componente
 type NavigationProp = StackNavigationProp<RootStackParamList>;
@@ -155,10 +156,11 @@ const Quiz = () => {
 	let [score, setScore] = useState(0);
 	const [alertVisible, setAlertVisible] = useState(false);
 	const [resultAlertVisible, setResultAlertVisible] = useState(false);
+	const { setUserProfile, userProfile } = useUser();
 
 	const navigation = useNavigation<NavigationProp>();
 
-	let user = userStore.getState().user;
+	// let user = userStore.getState().user;
 
 	const handleNextQuestion = () => {
 		if (selectedOption === null) {
@@ -204,28 +206,31 @@ const Quiz = () => {
 							try {
 								if (score === 0) score += 1;
 
-								if (!user) {
-									user = await getUserDetails();
-								}
+								// if (!user) {
+								// 	user = await getUserDetails(userProfile.email);
+								// }
 
 								const api = await getApiAxios();
-								const response = await api.put(`/api/usuario/${user?.email}`, {
+								await api.put(`/api/usuario/${userProfile.email}`, {
 									nivelConsciencia: score,
 								});
 
 								userStore.getState().setUser({
-									...user,
+									...userProfile,
 									nivelConsciencia: score,
-									nome: user?.nome ?? '',
-									email: user?.email ?? '',
-									fotoUsu: user?.fotoUsu ?? null,
-									isMonitor: user?.isMonitor ?? false,
-									telefone: user?.telefone ?? '',
+									nome: userProfile?.nome ?? '',
+									email: userProfile?.email ?? '',
+									profilePhotoUrl: userProfile?.profilePhotoUrl ?? '',
+									isMonitor: userProfile?.isMonitor ?? false,
+									telefone: userProfile?.telefone ?? '',
 								});
 
 								navigation.navigate('QuizzResult', { score: score });
 							} catch (error) {
 								console.error(error);
+								alert(
+									'Ocorreu um erro ao salvar o resultado. Tente novamente mais tarde.',
+								);
 							}
 						}}
 					/>
@@ -248,6 +253,7 @@ const Quiz = () => {
 						<View className="my-8">
 							{questions[currentQuestion].option.map((option, index) => (
 								<Option
+									// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
 									key={index}
 									option={option}
 									index={index}

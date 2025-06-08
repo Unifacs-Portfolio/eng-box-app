@@ -13,17 +13,20 @@ import { getUserDetails } from '../../utils/session/user-data';
 import { NavigationProp } from '../../utils/types/navigation';
 import { Post } from '../../utils/types/post';
 import { UserResponse } from '../../utils/types/user-response';
+import { useUser } from '../../Components/profile/UserContext';
 
 const Profile = () => {
 	const navigation = useNavigation<NavigationProp>();
-	const [userProfile, setUserProfile] = useState<UserResponse | null>(null);
+	// const [userProfile, setUserProfile] = useState<UserResponse | null>(null);
+	const { userProfile, setUserProfile } = useUser();
 	const [userPostagens, setUserPostagens] = useState<Post[]>([]);
 	const [loading, setLoading] = useState(true);
+	console.log('User Profile:', userProfile);
 
 	const fetchUserPosts = async (userEmail: string) => {
 		try {
 			const api = await getApiAxios();
-			const response = await api.get('/api/Enge/receitas');
+			const response = await api.get('/api/receitas');
 			const userPosts = response.data
 				.filter((posts: Post) => posts.idUsuario === userEmail)
 				.sort(
@@ -41,22 +44,20 @@ const Profile = () => {
 	};
 
 	useFocusEffect(
+		// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 		React.useCallback(() => {
 			// Do something when the screen is focused
 			(async () => {
-				const token = await getToken();
-				if (!token) {
-					alert('Você precisa realizar o login para acessar!');
-					navigation.navigate('Login');
-					return;
-				} else {
-					const user = await getUserDetails();
-					setUserProfile(user);
+				// const token = await getToken();
 
-					if (user) {
-						console.log('Buscando postagens...');
-						await fetchUserPosts(user.email);
-					}
+				// if (userProfile) {
+				// 	const user = await getUserDetails(userProfile.email);
+				// 	console.log(userProfile.email);
+				// 	// setUserProfile(user);
+				if (userProfile) {
+					console.log('Buscando postagens...');
+					await fetchUserPosts(userProfile.email);
+					// }
 				}
 				setLoading(false);
 			})();

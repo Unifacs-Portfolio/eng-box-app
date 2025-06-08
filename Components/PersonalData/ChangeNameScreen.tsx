@@ -8,6 +8,7 @@ import { userStore } from '../../utils/stores/user';
 import GoBackButton from '../GoBackButton';
 import HandleSaveButton from './HandleSaveButton';
 import SuccessModal from './SuccessModal';
+import { emails } from '../../utils/session/manager';
 
 const ChangeNameScreen = () => {
 	let user = userStore.getState().user;
@@ -35,7 +36,7 @@ const ChangeNameScreen = () => {
 	const onSubmit = async (data: { name: string | undefined }) => {
 		try {
 			if (!user) {
-				user = await getUserDetails();
+				user = await getUserDetails(emails);
 			} else {
 				if (data?.name) {
 					const formattedName = capitalizeName(data.name);

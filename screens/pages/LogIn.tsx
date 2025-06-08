@@ -23,18 +23,22 @@ import { getToken, saveToken } from '../../utils/session/manager';
 import { LoginFormData } from '../../utils/types/form/formData';
 import { NavigationProp } from '../../utils/types/navigation';
 import { TokenResponse } from '../../utils/types/token';
+import { useUser } from '../../Components/profile/UserContext';
+import { UserProfile } from '../../utils/types/UserProfile';
+import { getUserDetails } from '../../utils/session/user-data';
 
 export default function Login() {
 	const navigation = useNavigation<NavigationProp>();
 	const [rememberMe, setRememberMe] = useState(false);
 	const { control, handleSubmit, formState, reset } = useForm<LoginFormData>();
 	const { isSubmitting } = formState;
+	const { userProfile, setUserProfile } = useUser();
 
 	const [showPassword, setShowPassword] = React.useState<boolean>(false);
 
 	const handleLoginFormSubmit = async (data: LoginFormData) => {
 		try {
-			const { data: tokenObject } = await axiosLogin.post<TokenResponse>(
+			const response = await axiosLogin.post<UserProfile>(
 				'/api/usuario/login',
 				{
 					email: data.email,
@@ -42,7 +46,9 @@ export default function Login() {
 				},
 			);
 
-			await saveToken(tokenObject.token);
+			// await saveToken(tokenObject.token, tokenObject.email);
+			setUserProfile(response.data);
+			getUserDetails(response.data.email);
 
 			if (rememberMe) {
 				await storeRememberMeData();
@@ -64,6 +70,7 @@ export default function Login() {
 					alert(
 						errorData?.message || 'Ocorreu um erro ao tentar realizar o login.',
 					);
+					console.error('Erro ao fazer login:', errorData);
 				}
 			} else if (error.request) {
 				alert('Erro de conexão. Verifique sua internet.');

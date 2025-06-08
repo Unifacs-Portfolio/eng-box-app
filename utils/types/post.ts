@@ -1,15 +1,15 @@
 export interface Foto {
 	uri: string;
-	name: string,
-	type: string
+	name: string;
+	type: string;
 }
 export interface Post {
 	id: number;
 	idUsuario: string;
-	dataCriacao: string,
+	dataCriacao: string;
 	titulo: string;
-	tema: string,
-	subtemas: string,
+	tema: string;
+	subtemas: string;
 	conteudo: string;
 	fotos: Foto[];
 }
@@ -17,8 +17,8 @@ export interface Post {
 export interface Especialist {
 	titulo: string;
 	conteudo: string;
-	tema: string,
-	subtemas: string,
+	tema: string;
+	subtemas: string;
 	usuarioId: string;
-	IsCreatedBySpecialist : boolean;
+	IsCreatedBySpecialist: boolean;
 }

@@ -10,16 +10,20 @@ import { NavigationProp } from '../../utils/types/navigation';
 import { Post } from '../../utils/types/post';
 import Spinner from '../../Components/spinner';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { useUser } from '../../Components/profile/UserContext';
+import { UserResponse } from '../../utils/types/user-response';
 
 const Home = () => {
 	const [posts, setPosts] = useState<Post[]>([]);
 	const [loading, setLoading] = useState(true);
+	const [users, setUsers] = useState<UserResponse[]>([]);
 	const navigation = useNavigation<NavigationProp>();
+	const { userProfile } = useUser();
 
 	const fetchPosts = async () => {
 		try {
 			const api = await getApiAxios();
-			const response = await api.get('/api/Enge/receitas');
+			const response = await api.get('/api/receitas');
 			const sortedPosts = response.data.sort(
 				(a: Post, b: Post) =>
 					new Date(b.dataCriacao).getTime() - new Date(a.dataCriacao).getTime(),
@@ -33,18 +37,30 @@ const Home = () => {
 		}
 	};
 
+	const fetchUsers = async () => {
+		try {
+			const api = await getApiAxios();
+			const response = await api.get('/api/usuario'); // endpoint que retorna todos os usuários
+			setUsers(response.data);
+		} catch (error) {
+			console.error('Erro ao buscar usuários:', error);
+		}
+	};
+
 	useFocusEffect(
+		// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 		React.useCallback(() => {
 			// Do something when the screen is focused
 			(async () => {
-				const token = await getToken();
-				if (!token) {
+				// const token = await getToken();
+				if (!userProfile) {
 					alert('Você precisa realizar o login para acessar!');
 					navigation.navigate('Login');
 					return;
 				}
 
-				fetchPosts();
+				await fetchUsers();
+				await fetchPosts();
 			})();
 			return () => {
 				// Do something when the screen is unfocused
@@ -53,9 +69,19 @@ const Home = () => {
 		}, []),
 	);
 
+	// // Crie um mapa de usuários para acesso rápido
+	const userMap = React.useMemo(() => {
+		const map: Record<string, UserResponse> = {};
+		// biome-ignore lint/complexity/noForEach: <explanation>
+		users.forEach((user) => {
+			map[user.email] = user;
+		});
+		return map;
+	}, [users]);
+
 	const renderPost = ({ item }: { item: Post }) => (
 		<View className="mb-8">
-			<PostComponent post={item} />
+			<PostComponent post={item} user={userMap[item.idUsuario]} />
 		</View>
 	);
 

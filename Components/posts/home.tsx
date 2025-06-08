@@ -5,39 +5,43 @@ import { getUserDetailsByEmail } from '../../utils/session/user-data';
 import { Post } from '../../utils/types/post';
 import { UserResponse } from '../../utils/types/user-response';
 import { Ionicons } from '@expo/vector-icons';
+import { User } from '../../utils/types/user';
 type PostProps = {
 	post: Post;
+	user?: User;
 };
 
-const PostComponent = ({ post }: PostProps) => {
+const PostComponent = ({ post, user }: PostProps) => {
 	const imageUrl = post.fotos && post.fotos.length > 0 ? post.fotos[0] : '';
-	const [userPost, setUserPost] = useState<UserResponse | undefined>(undefined);
+	console.log(user);
+	// const [userPost, setUserPost] = useState<UserResponse | undefined>(undefined);
 	const [isExpanded, setIsExpanded] = useState<boolean>(false);
 	const MAX_LINES = 3;
 
-	useFocusEffect(
-		React.useCallback(() => {
-			// Do something when the screen is focused
-			(async () => {
-				const user = await getUserDetailsByEmail(post.idUsuario);
-				setUserPost(user);
-			})();
-			return () => {
-				// Do something when the screen is unfocused
-				// Useful for cleanup functions
-			};
-		}, []),
-	);
+	// useFocusEffect(
+	// 	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+	// 	React.useCallback(() => {
+	// 		// Do something when the screen is focused
+	// 		(async () => {
+	// 			// const user = await getUserDetailsByEmail();
+	// 			// setUserPost(user);
+	// 		})();
+	// 		return () => {
+	// 			// Do something when the screen is unfocused
+	// 			// Useful for cleanup functions
+	// 		};
+	// 	}, []),
+	// );
 
 	return (
-		<View>
-			<View className="bg-primaryGray px-4 py-1 rounded-tl-xl rounded-tr-xl">
-				<View className="flex flex-row items-center gap-x-3">
+		<View className="bg-white rounded-xl shadow-md mb-4">
+			<View className=" px-4 py-1 rounded-tl-xl rounded-tr-xl">
+				<View className="flex flex-row items-center gap-x-3 py-2">
 					<View className="h-11 w-11">
 						<Image
 							source={
-								userPost?.fotoUsu
-									? { uri: userPost?.fotoUsu }
+								user?.profilePhotoUrl
+									? { uri: user?.profilePhotoUrl }
 									: require('../../assets/icons/iconsLogin/blank-user-photo.jpg')
 							}
 							className="w-full h-full rounded-full"
@@ -50,10 +54,10 @@ const PostComponent = ({ post }: PostProps) => {
 							className="text-sm"
 							style={{ fontFamily: 'poppins-semi-bold' }}
 						>
-							{userPost?.nome || 'Autor desconhecido'}
+							{user?.nome || 'Autor desconhecido'}
 						</Text>
 
-						{userPost?.isMonitor && (
+						{user?.isMonitor && (
 							<View className="flex-row gap-x-1">
 								<Ionicons name="diamond-outline" size={14} color="black" />
 								<Text
@@ -70,10 +74,10 @@ const PostComponent = ({ post }: PostProps) => {
 				</View>
 			</View>
 
-			<View className="h-[430px] w-[430px] self-center">
+			<View className="h-[430px] w-[430px] self-center w-full">
 				{imageUrl ? (
 					<Image
-						source={{ uri: imageUrl as any }}
+						source={{ uri: imageUrl.uri }}
 						className="w-full h-full"
 						resizeMode="cover"
 					/>
@@ -84,7 +88,7 @@ const PostComponent = ({ post }: PostProps) => {
 
 			<View className="mx-3 mt-4 space-y-1">
 				<Text
-					className="text-2xl text-[#767676]"
+					className="text-2xl text-[#000000]"
 					style={{ fontFamily: 'poppins-semi-bold' }}
 				>
 					{post.titulo || 'Sem título'}
@@ -92,7 +96,7 @@ const PostComponent = ({ post }: PostProps) => {
 
 				<Text
 					numberOfLines={isExpanded ? undefined : MAX_LINES}
-					className="whitespace-normal w-full text-justify mt-2.5 leading-6 text-[#767676]"
+					className="whitespace-normal w-full text-start mt-2.5 leading-6 text-[#333232]"
 					style={{ fontFamily: 'poppins-medium' }}
 				>
 					{post.conteudo || 'Sem descrição'}
@@ -106,6 +110,7 @@ const PostComponent = ({ post }: PostProps) => {
 					</TouchableOpacity>
 				)}
 			</View>
+			<View className="h-[2px] bg-gray-200 w-full mt-4" />
 		</View>
 	);
 };

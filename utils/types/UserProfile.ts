@@ -1,8 +1,9 @@
 export interface UserProfile {
-	profilePhotoUrl?: string | null;
-	name: string;
-	username: string;
-	phoneNumber: string;
 	email: string;
-	password: string;
+	nome: string;
+	telefone: string;
+	profilePhotoUrl: string;
+	isMonitor: boolean;
+	nivelConsciencia: number;
+	token: string;
 }

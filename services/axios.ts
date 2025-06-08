@@ -5,6 +5,10 @@ export const axiosLogin = axios.create({
 	baseURL: process.env.API_URL,
 });
 
+export const axiosGeral = axios.create({
+	baseURL: process.env.API_URL,
+});
+
 export const getApiAxios = async () => {
 	const token = await getToken();
 
@@ -18,6 +22,5 @@ export const getApiAxios = async () => {
 	return api;
 };
 export const PostApiAxios = axios.create({
-	
-	baseURL: process.env.API_URL
+	baseURL: process.env.API_URL,
 });

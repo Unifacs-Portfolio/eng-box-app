@@ -16,28 +16,26 @@ interface UserContextProps {
 const UserContext = createContext<UserContextProps | undefined>(undefined);
 
 export const UserProvider = ({ children }: { children: ReactNode }) => {
-	const [userProfile, setUserProfile] = useState<UserProfile>({
-		profilePhotoUrl: 'https://picsum.photos/200/300',
-		name: '',
-		username: '',
-		email: '',
-		password: '',
-		phoneNumber: '',
-	});
+	const [userProfile, setUserProfile] = useState<UserProfile>(
+		{} as UserProfile,
+	);
 
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
 		(async () => {
-			const user = await getUserDetails();
+			const user = await getUserDetails(userProfile.email);
 
 			if (user) {
 				setUserProfile((state) => {
 					return {
 						...state,
 						email: user.email,
-						name: user.nome,
-						phoneNumber: user.telefone,
-						username: user.nome,
-						profilePhotoUrl: user.fotoUsu,
+						nome: user.nome,
+						telefone: user.telefone,
+						profilePhotoUrl: user.profilePhotoUrl,
+						isMonitor: user.isMonitor,
+						nivelConsciencia: user.nivelConsciencia,
+						token: user.token,
 					};
 				});
 			}
