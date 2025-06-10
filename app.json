@@ -1,8 +1,9 @@
 {
   "expo": {
     "name": "Eng Box",
-    "slug": "Eng-Box3",
-    "version": "1.0.0",
+    "slug": "eng-box3",
+    "owner": "sinvalluz",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
@@ -51,7 +52,7 @@
     ],
     "extra": {
       "eas": {
-        "projectId": "bf43e434-917e-443c-ae7a-965dee70a386"
+        "projectId": "e707082a-cb01-4fc2-aba1-f40e3a73bb40"
       }
     }
   }
