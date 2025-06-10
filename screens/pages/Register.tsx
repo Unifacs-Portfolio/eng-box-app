@@ -33,16 +33,11 @@ export default function Register() {
 		try {
 			const dados = {
 				email: data.email,
-				token: 'abc123xyz',
 				senha: data.password,
 				nome: data.username,
-				telefone: '123456789',
-				nivelConsciencia: 1,
-				isMonitor: false,
-				profilePhotoUrl: 'https://github.com/Sinvalluz.png',
 			};
 
-			const res = await PostApiAxios.post('/api/usuario', dados);
+			const res = await PostApiAxios.post('/api/usuario/registro', dados);
 			console.log('Response from API:', res.data);
 			alert('Conta criada com sucesso!');
 			reset();

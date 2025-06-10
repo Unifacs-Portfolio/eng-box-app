@@ -8,9 +8,11 @@ import { userStore } from '../../utils/stores/user';
 import GoBackButton from '../GoBackButton';
 import HandleSaveButton from './HandleSaveButton';
 import SuccessModal from './SuccessModal';
+import { useUser } from '../profile/UserContext';
 
 const ChangeTelephoneScreen = () => {
-	let user = userStore.getState().user;
+	// let user = userStore.getState().user;
+	const { setUserProfile, userProfile } = useUser();
 
 	const [isChanged, setIsChanged] = React.useState(false);
 	const [modalVisible, setModalVisible] = React.useState(false);
@@ -22,33 +24,21 @@ const ChangeTelephoneScreen = () => {
 		setError,
 	} = useForm({
 		defaultValues: {
-			phoneNumber: user?.telefone ?? '',
+			phoneNumber: userProfile?.telefone ?? '',
 		},
 	});
 
 	const onSubmit = async (data: { phoneNumber: string }) => {
 		try {
-			if (!user) {
-				user = await getUserDetails();
-			} else {
-				if (data?.phoneNumber) {
-					const api = await getApiAxios();
-					const response = await api.put(`/api/usuario/${user.email}`, {
-						telefone: data.phoneNumber,
-					});
-
-					userStore.getState().setUser({ ...user, telefone: data.phoneNumber });
-					setIsChanged(false);
-					setModalVisible(true);
-
-					setTimeout(() => setModalVisible(false), 1000);
-				}
-			}
-
+			const api = await getApiAxios();
+			await api.put(`/api/usuario/alterar/${userProfile.email}`, {
+				senha: data.phoneNumber,
+			});
+			setUserProfile({ ...userProfile, telefone: data.phoneNumber });
 			setIsChanged(false);
 			setModalVisible(true);
 
-			setTimeout(() => setModalVisible(false), 2000);
+			setTimeout(() => setModalVisible(false), 1000);
 		} catch (error) {
 			console.error(error);
 		}
@@ -92,7 +82,7 @@ const ChangeTelephoneScreen = () => {
 								keyboardType="phone-pad"
 								onChangeText={(text) => {
 									onChange(text);
-									setIsChanged(text !== user?.telefone);
+									setIsChanged(text !== userProfile?.telefone);
 								}}
 								onBlur={onBlur}
 								className="w-11/12 h-full pl-2 text-[#767676] text-lg"

@@ -15,6 +15,8 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { getApiAxios } from '../../services/axios';
 import { newPasswordFormData } from '../../utils/types/form/formData';
 import GoBackButton from '../GoBackButton';
+import { useNavigation } from '@react-navigation/native';
+import { NavigationProp } from '../../utils/types/navigation';
 
 type ChangePasswordFormProps = {
 	email: string;
@@ -22,6 +24,7 @@ type ChangePasswordFormProps = {
 
 const ChangePasswordForm = ({ email }: ChangePasswordFormProps) => {
 	const [token, setToken] = useState('');
+	const navigation = useNavigation<NavigationProp>();
 	const { control, handleSubmit, getValues, formState } =
 		useForm<newPasswordFormData>();
 	const { errors, isSubmitting } = formState;
@@ -31,12 +34,14 @@ const ChangePasswordForm = ({ email }: ChangePasswordFormProps) => {
 	const handlePasswordChange = async (data: newPasswordFormData) => {
 		try {
 			const api = await getApiAxios();
-			const response = await api.post(`/api/usuario/reset/${token}`, {
-				newPassword: data.password,
+			const response = await api.put(`/api/usuario/reset/${email}`, {
+				token: token,
+				novaSenha: data.password,
 			});
 
 			alert('Senha redefinida com sucesso!');
-		} catch (error) {
+			navigation.navigate('Login');
+		} catch (error: any) {
 			console.error(error.response.data);
 			alert('Erro ao redefinir senha!');
 		}
@@ -172,7 +177,7 @@ const ChangePasswordForm = ({ email }: ChangePasswordFormProps) => {
 										placeholder="Digite aqui..."
 										onChangeText={setToken}
 										value={token}
-										secureTextEntry={true}
+										secureTextEntry={false}
 									/>
 								</View>
 							</TouchableWithoutFeedback>

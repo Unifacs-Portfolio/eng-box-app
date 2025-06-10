@@ -1,19 +1,24 @@
+import { Post } from './UserProfile';
+
 export interface UserResponse {
-	nome: string;
+	id: number;
 	email: string;
-	telefone: string;
-	isMonitor: boolean;
-	nivelConsciencia: number;
-	profilePhotoUrl: string;
 	token: string;
+	nome: string;
+	telefone: string;
+	nivelConsciencia: number;
+	isMonitor: boolean;
+	profilePhotoUrl: string;
+	posts: Post[];
 }
 
 export interface User {
-	nome: string;
+	id: number;
 	email: string;
-	telefone: string;
-	isMonitor: boolean;
-	nivelConsciencia: number;
-	profilePhotoUrl: string;
 	token: string;
+	nome: string;
+	telefone: string;
+	nivelConsciencia: number;
+	isMonitor: boolean;
+	post: Post[];
 }

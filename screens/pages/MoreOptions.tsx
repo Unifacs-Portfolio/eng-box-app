@@ -13,9 +13,12 @@ import { removeToken } from '../../utils/session/manager';
 import { getUserDetails } from '../../utils/session/user-data';
 import { userStore } from '../../utils/stores/user';
 import { UserResponse } from '../../utils/types/user-response';
+import { useUser } from '../../Components/profile/UserContext';
+import { UserProfile } from '../../utils/types/UserProfile';
 const MoreOptions = () => {
 	const navigation = useNavigation();
-	const [userProfile, setUserProfile] = useState<UserResponse | null>(null);
+	// const [userProfile, setUserProfile] = useState<UserResponse | null>(null);
+	const { setUserProfile, userProfile } = useUser();
 	const [consumerLevel, setConsumerLevel] = useState<ConsumerOptions | null>(
 		null,
 	);
@@ -23,6 +26,7 @@ const MoreOptions = () => {
 	const handleLogoutApp = async () => {
 		await removeRememberMeData();
 		await removeToken();
+		setUserProfile({} as UserProfile);
 		userStore.getState().clearUser();
 		navigation.navigate('Wellcome');
 	};
@@ -31,9 +35,9 @@ const MoreOptions = () => {
 		React.useCallback(() => {
 			// Do something when the screen is focused
 			(async () => {
-				const user = await getUserDetails();
-				setUserProfile(user);
-				const consumer = getConsumerLevel(user?.nivelConsciencia);
+				// const user = await getUserDetails();
+				// setUserProfile(user);
+				const consumer = getConsumerLevel(userProfile.nivelConsciencia);
 				setConsumerLevel(consumer);
 			})();
 			return () => {

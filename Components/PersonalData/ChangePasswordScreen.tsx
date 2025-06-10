@@ -1,15 +1,23 @@
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { SafeAreaView, Text, TextInput, TouchableOpacity, View, } from 'react-native';
+import {
+	SafeAreaView,
+	Text,
+	TextInput,
+	TouchableOpacity,
+	View,
+} from 'react-native';
 import { getApiAxios } from '../../services/axios';
 import { userStore } from '../../utils/stores/user';
 import GoBackButton from '../GoBackButton';
 import HandleSaveButton from './HandleSaveButton';
 import SuccessModal from './SuccessModal';
+import { useUser } from '../profile/UserContext';
 
 const ChangePasswordScreen = () => {
-	const user = userStore.getState().user;
+	// const user = userStore.getState().user;
+	const { setUserProfile, userProfile } = useUser();
 
 	const {
 		control,
@@ -28,17 +36,14 @@ const ChangePasswordScreen = () => {
 
 	const onSubmit = async (data: { newPassword: string }) => {
 		try {
-			if (user) {
-				const api = await getApiAxios();
-				const response = await api.put(`/api/usuario/${user.email}`, {
-					senha: data.newPassword,
-				});
-			}
-
+			const api = await getApiAxios();
+			await api.put(`/api/usuario/alterar/${userProfile.email}`, {
+				senha: data.newPassword,
+			});
 			setIsChanged(false);
 			setModalVisible(true);
 
-			setTimeout(() => setModalVisible(false), 2000);
+			setTimeout(() => setModalVisible(false), 1000);
 		} catch (error) {
 			console.error(error);
 		}

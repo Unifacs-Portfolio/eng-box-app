@@ -1,18 +1,32 @@
 import { Ionicons } from '@expo/vector-icons';
-import { useFocusEffect, useNavigation, useRoute } from '@react-navigation/native';
+import {
+	useFocusEffect,
+	useNavigation,
+	useRoute,
+} from '@react-navigation/native';
 import * as React from 'react';
-import { Alert, Image, SafeAreaView, ScrollView, Text, View } from 'react-native';
+import {
+	Alert,
+	Image,
+	SafeAreaView,
+	ScrollView,
+	Text,
+	View,
+} from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Menu, PaperProvider } from 'react-native-paper';
 import { getApiAxios } from '../../services/axios';
 import { getToken } from '../../utils/session/manager';
 import { NavigationProp } from '../../utils/types/navigation';
 import { useState } from 'react';
+import { useUser } from '../../Components/profile/UserContext';
 const PostDetails = () => {
 	const navigation = useNavigation<NavigationProp>();
 	const route = useRoute();
 	const { id, imageUrl, titulo, conteudo } = route.params; // Parâmetros passados pela navegação
-	const [contextMenuVisible, setContextMenuVisible] = React.useState<boolean>(false);
+	const { setUserProfile, userProfile } = useUser();
+	const [contextMenuVisible, setContextMenuVisible] =
+		React.useState<boolean>(false);
 
 	const removePost = async (postId: number) => {
 		try {
@@ -21,30 +35,26 @@ const PostDetails = () => {
 			console.log('Post removido com sucesso:', response.data);
 		} catch (error: any) {
 			if (error.response) {
-				
 				console.error('Erro ao remover o post:', error.response.data);
 			} else if (error.request) {
-				
 				console.error('Erro na requisição:', error.request);
 			} else {
-				
 				console.error('Erro desconhecido:', error.message);
 			}
 		}
 	};
-	
+
 	useFocusEffect(
+		// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 		React.useCallback(() => {
 			// Do something when the screen is focused
 			(async () => {
-				const token = await getToken();
-				if (!token) {
+				// const token = await getToken();
+				if (!userProfile) {
 					alert('Você precisa realizar o login para acessar!');
-					navigation.navigate('LogIn');
+					navigation.navigate('Login');
 					return;
 				}
-				
-
 			})();
 			return () => {
 				// Do something when the screen is unfocused
@@ -55,28 +65,28 @@ const PostDetails = () => {
 	// Acao de Teste
 	const handleRemovePost = async () => {
 		if (!id) {
-			Alert.alert("Erro", "ID do post não encontrado.");
+			Alert.alert('Erro', 'ID do post não encontrado.');
 			return;
 		}
-	
+
 		Alert.alert(
-			"Confirmar Exclusão",
-			"Tem certeza que deseja remover este post?",
+			'Confirmar Exclusão',
+			'Tem certeza que deseja remover este post?',
 			[
-				{ text: "Cancelar", style: "cancel" },
+				{ text: 'Cancelar', style: 'cancel' },
 				{
-					text: "Excluir",
+					text: 'Excluir',
 					onPress: async () => {
 						try {
-							await removePost(id); 
-							Alert.alert("Sucesso", "Post removido com sucesso!");
-							navigation.goBack(); 
+							await removePost(id);
+							Alert.alert('Sucesso', 'Post removido com sucesso!');
+							navigation.goBack();
 						} catch (error) {
-							Alert.alert("Erro", "Não foi possível remover o post.");
+							Alert.alert('Erro', 'Não foi possível remover o post.');
 						}
 					},
 				},
-			]
+			],
 		);
 	};
 
@@ -99,7 +109,6 @@ const PostDetails = () => {
 
 					{/* Container Principal */}
 					<View className="flex-1 items-center justify-center mt-10">
-
 						{/* Botão para abrir modal "Opcoes do Post" */}
 						<View className="flex self-end mr-2 mt-16">
 							<Menu
@@ -107,7 +116,11 @@ const PostDetails = () => {
 								onDismiss={() => setContextMenuVisible(false)}
 								anchor={
 									<TouchableOpacity onPress={() => setContextMenuVisible(true)}>
-										<Ionicons name='ellipsis-vertical' size={24} color={"#767676"} />
+										<Ionicons
+											name="ellipsis-vertical"
+											size={24}
+											color={'#767676'}
+										/>
 									</TouchableOpacity>
 								}
 								contentStyle={{ backgroundColor: '#F9F9F9' }}
@@ -121,7 +134,10 @@ const PostDetails = () => {
 									leadingIcon={({ size }) => (
 										<Ionicons name="trash" size={size} color="#767676" />
 									)}
-									titleStyle={{ color: '#767676', fontFamily: "poppins-semi-bold" }}
+									titleStyle={{
+										color: '#767676',
+										fontFamily: 'poppins-semi-bold',
+									}}
 								/>
 							</Menu>
 						</View>

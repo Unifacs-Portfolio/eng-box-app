@@ -2,18 +2,17 @@ import { useFocusEffect } from '@react-navigation/native';
 import React, { useState } from 'react';
 import { Image, Text, TouchableOpacity, View } from 'react-native';
 import { getUserDetailsByEmail } from '../../utils/session/user-data';
-import { Post } from '../../utils/types/post';
 import { UserResponse } from '../../utils/types/user-response';
 import { Ionicons } from '@expo/vector-icons';
 import { User } from '../../utils/types/user';
+import { Post } from '../../utils/types/UserProfile';
 type PostProps = {
 	post: Post;
-	user?: User;
+	user: User;
 };
 
 const PostComponent = ({ post, user }: PostProps) => {
 	const imageUrl = post.fotos && post.fotos.length > 0 ? post.fotos[0] : '';
-	console.log(user);
 	// const [userPost, setUserPost] = useState<UserResponse | undefined>(undefined);
 	const [isExpanded, setIsExpanded] = useState<boolean>(false);
 	const MAX_LINES = 3;
@@ -77,7 +76,7 @@ const PostComponent = ({ post, user }: PostProps) => {
 			<View className="h-[430px] w-[430px] self-center w-full">
 				{imageUrl ? (
 					<Image
-						source={{ uri: imageUrl.uri }}
+						source={{ uri: imageUrl.url }}
 						className="w-full h-full"
 						resizeMode="cover"
 					/>

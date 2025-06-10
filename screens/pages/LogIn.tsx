@@ -38,8 +38,9 @@ export default function Login() {
 
 	const handleLoginFormSubmit = async (data: LoginFormData) => {
 		try {
+			console.log('Iniciando');
 			const response = await axiosLogin.post<UserProfile>(
-				'/api/usuario/login',
+				'https://mockapi-eng-box-app.vercel.app//api/usuario/login',
 				{
 					email: data.email,
 					senha: data.password,
@@ -48,13 +49,15 @@ export default function Login() {
 
 			// await saveToken(tokenObject.token, tokenObject.email);
 			setUserProfile(response.data);
-			getUserDetails(response.data.email);
+			// getUserDetails(response.data.email);
 
-			if (rememberMe) {
-				await storeRememberMeData();
-			} else {
-				await removeRememberMeData();
-			}
+			// if (rememberMe) {
+			// 	await storeRememberMeData();
+			// } else {
+			// 	await removeRememberMeData();
+			// }
+
+			console.log('terminando');
 
 			alert('Login realizado com sucesso!');
 			reset();
@@ -84,9 +87,9 @@ export default function Login() {
 		// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 		React.useCallback(() => {
 			(async () => {
-				const isRemember = await checkIsRemember();
-				const token = await getToken();
-				if (isRemember && token) navigation.navigate('Main');
+				// const isRemember = await checkIsRemember();
+				// const token = await getToken();
+				// if (isRemember && token) navigation.navigate('Main');
 			})();
 			return () => {
 				// Do something when the screen is unfocused

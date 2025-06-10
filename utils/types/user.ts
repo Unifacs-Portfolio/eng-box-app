@@ -2,10 +2,13 @@ import { UserResponse } from './user-response';
 
 export type User = Pick<
 	UserResponse,
+	| 'id'
 	| 'email'
-	| 'profilePhotoUrl'
-	| 'isMonitor'
-	| 'nivelConsciencia'
+	| 'token'
 	| 'nome'
 	| 'telefone'
+	| 'nivelConsciencia'
+	| 'isMonitor'
+	| 'profilePhotoUrl'
+	| 'posts'
 >;

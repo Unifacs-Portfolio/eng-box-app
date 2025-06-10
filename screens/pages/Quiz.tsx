@@ -211,19 +211,19 @@ const Quiz = () => {
 								// }
 
 								const api = await getApiAxios();
-								await api.put(`/api/usuario/${userProfile.email}`, {
+								await api.put(`/api/usuario/alterar/${userProfile.email}`, {
 									nivelConsciencia: score,
 								});
 
-								userStore.getState().setUser({
-									...userProfile,
-									nivelConsciencia: score,
-									nome: userProfile?.nome ?? '',
-									email: userProfile?.email ?? '',
-									profilePhotoUrl: userProfile?.profilePhotoUrl ?? '',
-									isMonitor: userProfile?.isMonitor ?? false,
-									telefone: userProfile?.telefone ?? '',
-								});
+								// userStore.getState().setUser({
+								// 	...userProfile,
+								// 	nivelConsciencia: score,
+								// 	nome: userProfile?.nome ?? '',
+								// 	email: userProfile?.email ?? '',
+								// 	profilePhotoUrl: userProfile?.profilePhotoUrl ?? '',
+								// 	isMonitor: userProfile?.isMonitor ?? false,
+								// 	telefone: userProfile?.telefone ?? '',
+								// });
 
 								navigation.navigate('QuizzResult', { score: score });
 							} catch (error) {

@@ -4,7 +4,7 @@ import { RegisterFormData } from './form/formData';
 export type RootStackParamList = {
 	MoreOptions: undefined;
 	PostDetails: {
-		id: number;
+		id: string;
 		imageUrl: any;
 		titulo: string;
 		conteudo: string;
