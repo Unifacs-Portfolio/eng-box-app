@@ -32,6 +32,7 @@ const MoreOptions = () => {
 	};
 
 	useFocusEffect(
+		// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 		React.useCallback(() => {
 			// Do something when the screen is focused
 			(async () => {

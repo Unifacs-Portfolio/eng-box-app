@@ -61,7 +61,7 @@ export default function Login() {
 
 			alert('Login realizado com sucesso!');
 			reset();
-			navigation.navigate('QuizPresentation');
+			navigation.navigate('Menu');
 		} catch (error: any) {
 			if (error.response) {
 				const { status, data: errorData } = error.response;
