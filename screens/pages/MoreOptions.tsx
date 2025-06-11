@@ -13,9 +13,12 @@ import { removeToken } from '../../utils/session/manager';
 import { getUserDetails } from '../../utils/session/user-data';
 import { userStore } from '../../utils/stores/user';
 import { UserResponse } from '../../utils/types/user-response';
+import { useUser } from '../../Components/profile/UserContext';
+import { UserProfile } from '../../utils/types/UserProfile';
 const MoreOptions = () => {
 	const navigation = useNavigation();
-	const [userProfile, setUserProfile] = useState<UserResponse | null>(null);
+	// const [userProfile, setUserProfile] = useState<UserResponse | null>(null);
+	const { setUserProfile, userProfile } = useUser();
 	const [consumerLevel, setConsumerLevel] = useState<ConsumerOptions | null>(
 		null,
 	);
@@ -23,17 +26,19 @@ const MoreOptions = () => {
 	const handleLogoutApp = async () => {
 		await removeRememberMeData();
 		await removeToken();
+		setUserProfile({} as UserProfile);
 		userStore.getState().clearUser();
 		navigation.navigate('Wellcome');
 	};
 
 	useFocusEffect(
+		// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 		React.useCallback(() => {
 			// Do something when the screen is focused
 			(async () => {
-				const user = await getUserDetails();
-				setUserProfile(user);
-				const consumer = getConsumerLevel(user?.nivelConsciencia);
+				// const user = await getUserDetails();
+				// setUserProfile(user);
+				const consumer = getConsumerLevel(userProfile.nivelConsciencia);
 				setConsumerLevel(consumer);
 			})();
 			return () => {
@@ -44,9 +49,11 @@ const MoreOptions = () => {
 	);
 
 	return (
-		<SafeAreaView className='flex-1'>
-			<ScrollView contentContainerStyle={{ flexGrow: 1, paddingBottom: 300 }} className="flex-1">
-
+		<SafeAreaView className="flex-1">
+			<ScrollView
+				contentContainerStyle={{ flexGrow: 1, paddingBottom: 300 }}
+				className="flex-1"
+			>
 				<GoBackButton title="Opções" />
 				<View className="flex items-center justify-center ">
 					<View className="bg-white w-80 h-32 my-2 rounded-md shadow flex-row items-center justify-center mt-[15%]">

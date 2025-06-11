@@ -7,9 +7,11 @@ import GoBackButton from '../GoBackButton';
 import { useUser } from '../profile/UserContext';
 import HandleSaveButton from './HandleSaveButton';
 import SuccessModal from './SuccessModal';
+import { getApiAxios } from '../../services/axios';
 
 const ChangeEmailScreen = () => {
-	const user = userStore.getState().user;
+	// const user = userStore.getState().user;
+	const { setUserProfile, userProfile } = useUser();
 
 	const {
 		control,
@@ -18,43 +20,48 @@ const ChangeEmailScreen = () => {
 		setError,
 	} = useForm({
 		defaultValues: {
-			email: user?.email ?? '',
+			email: userProfile?.email ?? '',
 		},
 	});
 
 	const [isChanged, setIsChanged] = React.useState(false);
 	const [modalVisible, setModalVisible] = React.useState(false);
 
-	const isEmailTaken = async (email: string) => {
-		const response = await fetch(``);
-		const data = await response.json();
-		return data.isTaken;
-	};
+	// const isEmailTaken = async (email: string) => {
+	// 	const response = await fetch(``);
+	// 	const data = await response.json();
+	// 	return data.isTaken;
+	// };
 
 	const onSubmit = async (data: { email: string }) => {
-		const emailInUse = await isEmailTaken(data.email);
+		const api = await getApiAxios();
 
-		if (emailInUse) {
+		// Busca todos os usuários
+		const response = await api.get('/api/usuarios');
+		const usuarios = response.data;
+
+		// Verifica se já existe o email (ignorando o próprio usuário)
+		const emailJaExiste = usuarios.some(
+			(u: any) => u.email === data.email && u.email !== userProfile.email,
+		);
+
+		if (emailJaExiste) {
 			setError('email', {
 				type: 'manual',
-				message: 'Este email já está em uso por outro usuário',
+				message: 'Este email já está em uso.',
 			});
 			return;
 		}
 
-		userStore.getState().setUser({
-			...user,
+		await api.put(`/api/usuario/alterar/${userProfile.email}`, {
 			email: data.email,
-			nome: user?.nome ?? '',
-			fotoUsu: user?.fotoUsu ?? null,
-			isMonitor: user?.isMonitor ?? false,
-			nivelConsciencia: user?.nivelConsciencia ?? 0,
-			telefone: user?.telefone ?? '',
 		});
+		// Atualize o contexto do usuário
+		setUserProfile({ ...userProfile, email: data.email });
 		setIsChanged(false);
 		setModalVisible(true);
 
-		setTimeout(() => setModalVisible(false), 2000);
+		setTimeout(() => setModalVisible(false), 1000);
 	};
 
 	return (
@@ -93,7 +100,7 @@ const ChangeEmailScreen = () => {
 								placeholder="Digite o email"
 								onChangeText={(text) => {
 									onChange(text);
-									setIsChanged(text !== user?.email);
+									setIsChanged(text !== userProfile?.email);
 								}}
 								onBlur={onBlur}
 								className="w-11/12 h-full pl-2 text-[#767676] text-base"

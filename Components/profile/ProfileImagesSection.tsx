@@ -6,9 +6,11 @@ import { getConsumerLevel } from '../../utils/getConsumerLevel';
 import { getLevesTree } from '../../utils/getLevelsTree';
 import { UserResponse } from '../../utils/types/user-response';
 import { useUser } from './UserContext';
+import { UserProfile } from '../../utils/types/UserProfile';
+import { getUserDetails } from '../../utils/session/user-data';
 
 type ProfileImagesSectionProps = {
-	user: UserResponse | null;
+	user: UserProfile;
 };
 
 const ProfileImagesSection = ({ user }: ProfileImagesSectionProps) => {
@@ -18,9 +20,9 @@ const ProfileImagesSection = ({ user }: ProfileImagesSectionProps) => {
 	return (
 		<View className="items-center justify-center">
 			<View className="relative w-40 h-40 rounded-full items-center justify-center shadow-sm">
-				{user?.fotoUsu ? (
+				{user?.profilePhotoUrl ? (
 					<Image
-						source={{ uri: user?.fotoUsu }}
+						source={{ uri: user?.profilePhotoUrl }}
 						className="w-full h-full rounded-full"
 					/>
 				) : (

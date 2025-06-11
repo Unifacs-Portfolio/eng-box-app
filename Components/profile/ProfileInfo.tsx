@@ -6,9 +6,10 @@ import { getConsumerLevel } from '../../utils/getConsumerLevel';
 import { userStore } from '../../utils/stores/user';
 import { User } from '../../utils/types/user';
 import { UserResponse } from '../../utils/types/user-response';
+import { UserProfile } from '../../utils/types/UserProfile';
 
 type ProfileInfoProps = {
-	user: UserResponse | null;
+	user: UserProfile;
 };
 
 const ProfileInfo = ({ user }: ProfileInfoProps) => {
@@ -20,7 +21,7 @@ const ProfileInfo = ({ user }: ProfileInfoProps) => {
 					className="text-base text-[#767676] ml-2"
 					style={{ fontFamily: 'poppins-medium' }}
 				>
-					{user?.nome}
+					{user.nome}
 				</Text>
 			</View>
 
@@ -33,7 +34,7 @@ const ProfileInfo = ({ user }: ProfileInfoProps) => {
 					className="text-base text-[#7CC77F]"
 					style={{ fontFamily: 'poppins-medium' }}
 				>
-					{getConsumerLevel(user?.nivelConsciencia)}
+					{getConsumerLevel(user.nivelConsciencia)}
 				</Text>
 			</View>
 		</View>

@@ -23,36 +23,45 @@ import { getToken, saveToken } from '../../utils/session/manager';
 import { LoginFormData } from '../../utils/types/form/formData';
 import { NavigationProp } from '../../utils/types/navigation';
 import { TokenResponse } from '../../utils/types/token';
+import { useUser } from '../../Components/profile/UserContext';
+import { UserProfile } from '../../utils/types/UserProfile';
+import { getUserDetails } from '../../utils/session/user-data';
 
-export default function LogIn() {
+export default function Login() {
 	const navigation = useNavigation<NavigationProp>();
 	const [rememberMe, setRememberMe] = useState(false);
 	const { control, handleSubmit, formState, reset } = useForm<LoginFormData>();
 	const { isSubmitting } = formState;
+	const { userProfile, setUserProfile } = useUser();
 
 	const [showPassword, setShowPassword] = React.useState<boolean>(false);
 
 	const handleLoginFormSubmit = async (data: LoginFormData) => {
 		try {
-			const { data: tokenObject } = await axiosLogin.post<TokenResponse>(
-				'/api/usuario/login',
+			console.log('Iniciando');
+			const response = await axiosLogin.post<UserProfile>(
+				'https://mockapi-eng-box-app.vercel.app//api/usuario/login',
 				{
 					email: data.email,
 					senha: data.password,
 				},
 			);
 
-			await saveToken(tokenObject.token);
+			// await saveToken(tokenObject.token, tokenObject.email);
+			setUserProfile(response.data);
+			// getUserDetails(response.data.email);
 
-			if (rememberMe) {
-				await storeRememberMeData();
-			} else {
-				await removeRememberMeData();
-			}
+			// if (rememberMe) {
+			// 	await storeRememberMeData();
+			// } else {
+			// 	await removeRememberMeData();
+			// }
+
+			console.log('terminando');
 
 			alert('Login realizado com sucesso!');
 			reset();
-			navigation.navigate('QuizPresentation');
+			navigation.navigate('Menu');
 		} catch (error: any) {
 			if (error.response) {
 				const { status, data: errorData } = error.response;
@@ -64,6 +73,7 @@ export default function LogIn() {
 					alert(
 						errorData?.message || 'Ocorreu um erro ao tentar realizar o login.',
 					);
+					console.error('Erro ao fazer login:', errorData);
 				}
 			} else if (error.request) {
 				alert('Erro de conexão. Verifique sua internet.');
@@ -74,11 +84,12 @@ export default function LogIn() {
 	};
 
 	useFocusEffect(
+		// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 		React.useCallback(() => {
 			(async () => {
-				const isRemember = await checkIsRemember();
-				const token = await getToken();
-				if (isRemember && token) navigation.navigate('Main');
+				// const isRemember = await checkIsRemember();
+				// const token = await getToken();
+				// if (isRemember && token) navigation.navigate('Main');
 			})();
 			return () => {
 				// Do something when the screen is unfocused
@@ -110,7 +121,7 @@ export default function LogIn() {
 						{/*Wellcome*/}
 						<Text
 							style={{ fontFamily: 'poppins-bold' }}
-							className="text-[#5A5A5A] mb-3 text-2xl ml-2"
+							className="text-[#5A5A5A] mb-2 text-2xl ml-2"
 						>
 							Bem-vindo de Volta!
 						</Text>
@@ -123,7 +134,7 @@ export default function LogIn() {
 
 						{/*Input User*/}
 
-						<View className="w-full mb-4">
+						<View className="w-full mb-6 h-24">
 							<View className="flex-row items-center mb-2 mr-5 ">
 								<Ionicons name="person-sharp" size={20} color={'#5A5A5A'} />
 
@@ -165,7 +176,7 @@ export default function LogIn() {
 										{error && (
 											<Text
 												style={{ fontFamily: 'poppins-semi-bold' }}
-												className="text-[#ff375b] text-xs ml-2"
+												className="text-[#ff375b] text-xs ml-2 mt-1"
 											>
 												{error.message}
 											</Text>
@@ -176,7 +187,7 @@ export default function LogIn() {
 						</View>
 
 						{/*Input Password*/}
-						<View className="w-full mb-4 ">
+						<View className="w-full mb-6 h-24">
 							<View className="flex-row items-center mb-2 mr-5 ">
 								<Ionicons name="lock-closed" size={20} color={'#5A5A5A'} />
 								<Text
@@ -229,7 +240,7 @@ export default function LogIn() {
 										{error && (
 											<Text
 												style={{ fontFamily: 'poppins-semi-bold' }}
-												className="text-[#ff375b] text-xs mt-2"
+												className="text-[#ff375b] text-xs ml-2 mt-1"
 											>
 												{error.message}
 											</Text>
@@ -240,35 +251,36 @@ export default function LogIn() {
 						</View>
 
 						{/*Remember me and ForgotPassword */}
-						<View className="w-full flex-row justify-around mb-6">
-							<View className="flex-row items-center">
-								<TouchableOpacity
-									className={`shadow-sm w-6 h-6 rounded-sm border-2 ${rememberMe ? 'bg-[#D9D9D9]' : 'bg-white border-[#D9D9D9]'}`}
-									onPress={() => setRememberMe(!rememberMe)}
-								>
-									{rememberMe && (
-										<View className="w-full h-full bg-[#5A5A5A]">
-											<Ionicons
-												name="checkbox-outline"
-												size={20}
-												color="white"
-											/>
-										</View>
-									)}
-								</TouchableOpacity>
+						<View className="w-full flex-row mb-6 items-center">
+							<View className="flex-row items-center justify-between w-full">
+								<View className="flex flex-row items-center gap-2">
+									<TouchableOpacity
+										className={`shadow-sm w-6 h-6 rounded-sm border-2 ${rememberMe ? 'bg-[#D9D9D9]' : 'bg-white border-[#D9D9D9]'}`}
+										onPress={() => setRememberMe(!rememberMe)}
+									>
+										{rememberMe && (
+											<View className="w-full h-full bg-[#5A5A5A]">
+												<Ionicons
+													name="checkbox-outline"
+													size={20}
+													color="white"
+												/>
+											</View>
+										)}
+									</TouchableOpacity>
 
-								<Text
-									className="text-[#767676] ml-1"
-									style={{ fontFamily: 'poppins-regular' }}
-								>
-									Lembrar de Mim
-								</Text>
+									<Text
+										className="text-[#767676]"
+										style={{ fontFamily: 'poppins-regular' }}
+									>
+										Lembrar de Mim
+									</Text>
+								</View>
 								<TouchableOpacity
-									className="ml-6"
 									onPress={() => navigation.navigate('ForgotPassword')}
 								>
 									<Text
-										className="shadow text-sm text-[#5A5A5A] mr-2 underline"
+										className="shadow text-sm text-[#5A5A5A] underline"
 										style={{ fontFamily: 'poppins-regular' }}
 									>
 										Esqueceu sua Senha?
@@ -298,7 +310,10 @@ export default function LogIn() {
 							</View>
 							<TouchableOpacity
 								className="shadow text-[#767676]"
-								onPress={() => navigation.navigate('Register')}
+								onPress={() => {
+									navigation.navigate('Register');
+									reset();
+								}}
 							>
 								<Text
 									className="text-[#5A5A5A] ml-1 underline"

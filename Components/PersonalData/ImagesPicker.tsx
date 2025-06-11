@@ -8,13 +8,17 @@ import { getUserDetails } from '../../utils/session/user-data';
 import { userStore } from '../../utils/stores/user';
 import ProfileInfo from '../profile/ProfileInfo';
 import SuccessModal from './SuccessModal';
+import { useUser } from '../profile/UserContext';
 
 const ProfilePhotoPicker: React.FC = () => {
-	let user = userStore.getState().user;
+	// let user = userStore.getState().user;
+	const { setUserProfile, userProfile } = useUser();
 
 	const [modalVisible, setModalVisible] = React.useState<boolean>(false);
-	const [succesModalVisible, setSuccessModalVisible] = React.useState<boolean>(false);
-	const [imageErrorModalVisible, setImageErrorModalVisible] = React.useState<boolean>(false);
+	const [succesModalVisible, setSuccessModalVisible] =
+		React.useState<boolean>(false);
+	const [imageErrorModalVisible, setImageErrorModalVisible] =
+		React.useState<boolean>(false);
 
 	const pickImage = async (): Promise<void> => {
 		const permissionResult =
@@ -31,8 +35,8 @@ const ProfilePhotoPicker: React.FC = () => {
 			quality: 1,
 		});
 
-		if (!user) {
-			user = await getUserDetails();
+		if (!userProfile) {
+			// userProfile = await getUserDetails();
 		} else {
 			if (!result.canceled && result.assets?.[0]) {
 				const file = result.assets[0];
@@ -52,7 +56,8 @@ const ProfilePhotoPicker: React.FC = () => {
 				const isUpadatedImage = await uploadImage(file);
 
 				if (isUpadatedImage) {
-					userStore.getState().setUser({ ...user, fotoUsu: file.uri });
+					// userStore.getState().setUser({ ...user, fotoUsu: file.url });
+					setUserProfile({ ...userProfile, profilePhotoUrl: file.uri });
 					showSuccessModal();
 				}
 			}
@@ -61,9 +66,9 @@ const ProfilePhotoPicker: React.FC = () => {
 
 	const uploadImage = async (image: ImagePicker.ImagePickerAsset) => {
 		try {
-			if (user) {
+			if (userProfile) {
 				const imageCover: any = {
-					uri: image.uri,
+					url: image.uri,
 					name: image.fileName ?? 'unknown.jpg',
 					type: image.mimeType ?? 'image/jpeg',
 				};
@@ -75,8 +80,8 @@ const ProfilePhotoPicker: React.FC = () => {
 
 				// Faça a requisição para a API
 				const response = await api.putForm(
-					`/api/usuario/${user.email}`,
-					formData,
+					`/api/usuario/${userProfile.email}`,
+					{ profilePhotoUrl: image.uri },
 				);
 
 				if (response.status === 200) {
@@ -102,10 +107,11 @@ const ProfilePhotoPicker: React.FC = () => {
 	};
 
 	const removeImage = async (): Promise<void> => {
-		if (!user) {
-			user = await getUserDetails();
+		if (!userProfile) {
+			// user = await getUserDetails();
 		} else {
-			userStore.getState().setUser({ ...user, fotoUsu: null });
+			// userStore.getState().setUser({ ...userProfile, fotoUsu: null });
+			setUserProfile({ ...userProfile, profilePhotoUrl: '' });
 			showSuccessModal();
 		}
 	};
@@ -118,9 +124,9 @@ const ProfilePhotoPicker: React.FC = () => {
 	return (
 		<View className="flex items-center">
 			<View className="relative rounded-full w-40 h-40 items-center justify-center shadow-sm">
-				{user?.fotoUsu ? (
+				{userProfile?.profilePhotoUrl ? (
 					<Image
-						source={{ uri: user.fotoUsu }}
+						source={{ uri: userProfile.profilePhotoUrl }}
 						className="w-full h-full rounded-full"
 					/>
 				) : (
@@ -135,7 +141,7 @@ const ProfilePhotoPicker: React.FC = () => {
 				</TouchableOpacity>
 			</View>
 
-			<ProfileInfo user={user} />
+			<ProfileInfo user={userProfile} />
 
 			{/* Modal de Alteracao */}
 			<Modal

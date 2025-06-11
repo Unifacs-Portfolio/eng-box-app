@@ -18,9 +18,10 @@ import { TabRoutes } from './utils/enums/tab-routes';
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
-function TabNavigator() {
+function TabNavigator({ initialRouteName }: { initialRouteName: string }) {
 	return (
 		<Tab.Navigator
+			initialRouteName={initialRouteName}
 			screenOptions={({ route }) => ({
 				tabBarIcon: (props) => renderTabIcon({ ...props, route }),
 				tabBarStyle: {
@@ -35,10 +36,10 @@ function TabNavigator() {
 				tabBarActiveTintColor: '#5A5A5A',
 			})}
 		>
-			<Tab.Screen name="Home" component={Screens.Home} />
-			<Tab.Screen name="Explore" component={Screens.Explore} />
-			<Tab.Screen name="Upload" component={Screens.Upload} />
-			<Tab.Screen name="Profile" component={Screens.Profile} />
+			<Tab.Screen name="TabHome" component={Screens.Home} />
+			<Tab.Screen name="TabExplore" component={Screens.Explore} />
+			<Tab.Screen name="TabUpload" component={Screens.Upload} />
+			<Tab.Screen name="TabProfile" component={Screens.Profile} />
 		</Tab.Navigator>
 	);
 }
@@ -87,6 +88,11 @@ const renderTabIcon = ({
 	);
 };
 
+const HomeNavigator = () => TabNavigator({ initialRouteName: 'TabHome' });
+const ExploreNavigator = () => TabNavigator({ initialRouteName: 'TabExplore' });
+const UploadNavigator = () => TabNavigator({ initialRouteName: 'TabUpload' });
+const ProfileNavigator = () => TabNavigator({ initialRouteName: 'TabProfile' });
+
 export default function App() {
 	const [fontsLoaded] = useFonts({
 		'poppins-medium': require('./assets/fonts/Poppins-Medium.ttf'),
@@ -120,7 +126,7 @@ export default function App() {
 					/>
 					<Stack.Screen
 						name="Main"
-						component={TabNavigator}
+						component={HomeNavigator}
 						options={{ headerShown: false }}
 					/>
 					<Stack.Screen
@@ -169,8 +175,8 @@ export default function App() {
 						options={{ headerShown: false }}
 					/>
 					<Stack.Screen
-						name="LogIn"
-						component={Screens.LogIn}
+						name="Login"
+						component={Screens.Login}
 						options={{ headerShown: false }}
 					/>
 					<Stack.Screen
@@ -236,6 +242,21 @@ export default function App() {
 					<Stack.Screen
 						name="UserHint"
 						component={Screens.UserHint}
+						options={{ headerShown: false }}
+					/>
+					<Stack.Screen
+						name="Explore"
+						component={ExploreNavigator}
+						options={{ headerShown: false }}
+					/>
+					<Stack.Screen
+						name="Upload"
+						component={UploadNavigator}
+						options={{ headerShown: false }}
+					/>
+					<Stack.Screen
+						name="Profile"
+						component={ProfileNavigator}
 						options={{ headerShown: false }}
 					/>
 				</Stack.Navigator>

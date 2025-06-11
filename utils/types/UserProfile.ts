@@ -1,8 +1,27 @@
 export interface UserProfile {
-	profilePhotoUrl?: string | null;
-	name: string;
-	username: string;
-	phoneNumber: string;
+	id: number;
 	email: string;
-	password: string;
+	token: string;
+	nome: string;
+	telefone: string;
+	nivelConsciencia: number;
+	profilePhotoUrl: string;
+	isMonitor: boolean;
+	posts: Post[];
+}
+
+export interface Post {
+	id: string;
+	dataCriacao: string;
+	titulo: string;
+	tema: string;
+	subtemas: string;
+	conteudo: string;
+	fotos: Foto[];
+}
+
+export interface Foto {
+	url: string;
+	name: string;
+	type: string;
 }

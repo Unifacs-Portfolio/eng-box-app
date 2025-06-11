@@ -3,12 +3,12 @@ import React from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../utils/types/navigation';
-import { Post } from '../../utils/types/post'; 
+import { Post } from '../../utils/types/UserProfile';
 
 type NavigationProp = StackNavigationProp<RootStackParamList>;
 
 interface PostListProps {
-	posts: Post[]; 
+	posts: Post[];
 }
 
 const PostList: React.FC<PostListProps> = ({ posts }) => {
@@ -17,24 +17,22 @@ const PostList: React.FC<PostListProps> = ({ posts }) => {
 
 	// Função que renderiza cada item da lista
 	const renderPostItem = ({ item }: { item: Post }) => (
-		
 		<TouchableOpacity
 			className="border-r border-b border-[#B8B8B8]"
 			style={{ width: width / 3 - 1 }}
-			onPress={() =>
-				navigation.navigate('PostDetails', {
-					id: item.id,
-					imageUrl: item.fotos[0] || '', 
-					titulo: item.titulo,
-					conteudo: item.conteudo,
-					
-				})
-				
-			}
+			// onPress={() =>
+			// 	navigation.navigate('PostDetails', {
+			// 		id: item.id.toString(),
+			// 		imageUrl: item.fotos[0] || '',
+			// 		titulo: item.titulo,
+			// 		conteudo: item.conteudo,
+			// 	})
+			// }
 		>
-			
 			<Image
-				source={{ uri: item.fotos[0] || 'https://via.placeholder.com/140' }} // dando erro por conta do any em navigation
+				source={{
+					uri: item.fotos[0].url || 'https://via.placeholder.com/140',
+				}} // dando erro por conta do any em navigation
 				className="w-[140.33px] h-[140.33px]"
 			/>
 		</TouchableOpacity>
@@ -42,11 +40,11 @@ const PostList: React.FC<PostListProps> = ({ posts }) => {
 
 	return (
 		<FlatList
-			data={posts} 
+			data={posts}
 			keyExtractor={(item) => item.id.toString()}
 			renderItem={renderPostItem}
-			numColumns={3} 
-			scrollEnabled={false} 
+			numColumns={3}
+			scrollEnabled={false}
 		/>
 	);
 };

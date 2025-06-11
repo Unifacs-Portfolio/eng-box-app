@@ -1,5 +1,5 @@
 import { useNavigation } from '@react-navigation/native';
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
 	Image,
 	KeyboardAvoidingView,
@@ -13,7 +13,7 @@ import 'tailwindcss/tailwind.css';
 import { Controller, useForm } from 'react-hook-form';
 import { ScrollView } from 'react-native-gesture-handler';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { axiosLogin } from '../../services/axios';
+import { axiosLogin, PostApiAxios } from '../../services/axios';
 import { getUserDetailsByEmail } from '../../utils/session/user-data';
 import { RegisterFormData } from '../../utils/types/form/formData';
 import { NavigationProp } from '../../utils/types/navigation';
@@ -31,19 +31,17 @@ export default function Register() {
 
 	const handleRegisterFormSubmit = async (data: RegisterFormData) => {
 		try {
-			const { data: message } = await axiosLogin.post('/api/usuario', {
+			const dados = {
 				email: data.email,
 				senha: data.password,
 				nome: data.username,
-				nivelConsciencia: 1,
-				isMonitor: false,
-				tokens: `${Math.random()}`,
-				telefone: '123232323',
-			});
+			};
 
+			const res = await PostApiAxios.post('/api/usuario/registro', dados);
+			console.log('Response from API:', res.data);
 			alert('Conta criada com sucesso!');
 			reset();
-			navigation.navigate('LogIn');
+			navigation.navigate('Login');
 		} catch (error: any) {
 			if (error.response) {
 				const { status, data: errorData } = error.response;
@@ -56,6 +54,7 @@ export default function Register() {
 					alert('Email já registrado!');
 				} else {
 					alert('Erro ao criar conta');
+					console.error('Erro ao criar conta:', errorData);
 				}
 			}
 		}
@@ -94,7 +93,7 @@ export default function Register() {
 
 						{/* Input de Usuário */}
 						<View className="w-4/5">
-							<View className="mb-4">
+							<View className="mb-4 h-24">
 								<View className="flex-row items-center mb-2">
 									<Ionicons name="person-sharp" size={20} color={'#5A5A5A'} />
 									<Text
@@ -141,7 +140,7 @@ export default function Register() {
 											{error && (
 												<Text
 													style={{ fontFamily: 'poppins-semi-bold' }}
-													className="text-[#ff375b] text-xs ml-2"
+													className="text-[#ff375b] text-xs ml-2 mt-1"
 												>
 													{error.message}
 												</Text>
@@ -152,7 +151,7 @@ export default function Register() {
 							</View>
 
 							{/* Input de email */}
-							<View className="mb-4">
+							<View className="mb-4 h-24">
 								<View className="flex-row items-center mb-2">
 									<Ionicons name="mail" size={20} color={'#5A5A5A'} />
 									<Text
@@ -198,7 +197,7 @@ export default function Register() {
 											{error && (
 												<Text
 													style={{ fontFamily: 'poppins-semi-bold' }}
-													className="text-[#ff375b] text-xs ml-2"
+													className="text-[#ff375b] text-xs ml-2 mt-1"
 												>
 													{error.message}
 												</Text>
@@ -209,7 +208,7 @@ export default function Register() {
 							</View>
 
 							{/* Input de senha */}
-							<View className="mb-4">
+							<View className="mb-4 h-24">
 								<View className="flex-row items-center mb-2">
 									<Ionicons name="lock-closed" size={20} color={'#5A5A5A'} />
 									<Text
@@ -262,7 +261,7 @@ export default function Register() {
 											{error && (
 												<Text
 													style={{ fontFamily: 'poppins-semi-bold' }}
-													className="text-[#ff375b] text-xs ml-2"
+													className="text-[#ff375b] text-xs ml-2 mt-1"
 												>
 													{error.message}
 												</Text>
@@ -273,7 +272,7 @@ export default function Register() {
 							</View>
 
 							{/* Input de confirmar senha */}
-							<View className="mb-4">
+							<View className="mb-4 h-24">
 								<View className="flex-row items-center mb-2">
 									<Ionicons name="lock-closed" size={20} color={'#5A5A5A'} />
 									<Text
@@ -332,7 +331,7 @@ export default function Register() {
 											{error && (
 												<Text
 													style={{ fontFamily: 'poppins-semi-bold' }}
-													className="text-[#ff375b] text-xs ml-2"
+													className="text-[#ff375b] text-xs ml-2 mt-1"
 												>
 													{error.message}
 												</Text>
@@ -359,7 +358,10 @@ export default function Register() {
 						</View>
 						<TouchableOpacity
 							className="shadow text-[#767676]"
-							onPress={() => navigation.navigate('LogIn')}
+							onPress={() => {
+								navigation.navigate('Login');
+								reset();
+							}}
 						>
 							<Text className="font-semibold text-sm text-[#767676] ml-1">
 								Entrar

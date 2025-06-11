@@ -8,12 +8,15 @@ import { userStore } from '../../utils/stores/user';
 import GoBackButton from '../GoBackButton';
 import HandleSaveButton from './HandleSaveButton';
 import SuccessModal from './SuccessModal';
+import { useUser } from '../profile/UserContext';
+// import { emails } from '../../utils/session/manager';
 
 const ChangeNameScreen = () => {
-	let user = userStore.getState().user;
+	// let user = userStore.getState().user;
 
 	const [isChanged, setIsChanged] = React.useState(false);
 	const [modalVisible, setModalVisible] = React.useState(false);
+	const { userProfile, setUserProfile } = useUser();
 
 	const {
 		control,
@@ -21,7 +24,7 @@ const ChangeNameScreen = () => {
 		formState: { errors },
 	} = useForm({
 		defaultValues: {
-			name: user?.nome ?? '',
+			name: userProfile?.nome ?? '',
 		},
 	});
 
@@ -32,26 +35,36 @@ const ChangeNameScreen = () => {
 			.join(' ');
 	};
 
-	const onSubmit = async (data: { name: string | undefined }) => {
+	const onSubmit = async (data: { name: string }) => {
 		try {
-			if (!user) {
-				user = await getUserDetails();
-			} else {
-				if (data?.name) {
-					const formattedName = capitalizeName(data.name);
+			// if (!user) {
+			// 	user = await getUserDetails(emails);
+			// } else {
+			// 	if (data?.name) {
+			// 		const formattedName = capitalizeName(data.name);
 
-					const api = await getApiAxios();
-					const response = await api.put(`/api/usuario/${user.email}`, {
-						nome: formattedName,
-					});
+			// 		const api = await getApiAxios();
+			// 		const response = await api.put(`/api/usuario/${user.email}`, {
+			// 			nome: formattedName,
+			// 		});
 
-					userStore.getState().setUser({ ...user, nome: formattedName });
-					setIsChanged(false);
-					setModalVisible(true);
+			// 		userStore.getState().setUser({ ...user, nome: formattedName });
+			// 		setIsChanged(false);
+			// 		setModalVisible(true);
 
-					setTimeout(() => setModalVisible(false), 1000);
-				}
-			}
+			// 		setTimeout(() => setModalVisible(false), 1000);
+			// 	}
+			// }
+			const api = await getApiAxios();
+			await api.put(`/api/usuario/alterar/${userProfile.email}`, {
+				nome: data.name,
+			});
+			// Atualize o contexto do usuário
+			setUserProfile({ ...userProfile, nome: data.name });
+			setIsChanged(false);
+			setModalVisible(true);
+
+			setTimeout(() => setModalVisible(false), 1000);
 		} catch (error) {
 			console.error(error);
 		}
@@ -95,7 +108,7 @@ const ChangeNameScreen = () => {
 								placeholder="Digite seu nome"
 								onChangeText={(text) => {
 									onChange(text);
-									setIsChanged(text !== user?.nome);
+									setIsChanged(text !== userProfile?.nome);
 								}}
 								onBlur={onBlur}
 								className="w-11/12 h-full pl-2 text-[#767676] text-lg"

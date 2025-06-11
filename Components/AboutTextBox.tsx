@@ -119,7 +119,7 @@ export const AboutTextBox = ({
 				)}
 			</View>
 			<Text
-				className="w-full text-justify self-start text-base px-2 my-2 text-[#767676] mt-2.5"
+				className="w-full text-justify self-start text-base px-2 my-2 text-[#767676] mt-2.5 min-h-full"
 				style={{ fontFamily: 'poppins-medium' }}
 			>
 				{boxTextContent}
