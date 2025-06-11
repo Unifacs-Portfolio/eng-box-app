@@ -9,13 +9,13 @@ export const axiosGeral = axios.create({
 });
 
 export const getApiAxios = async () => {
-	// const token = await getToken();
+	const token = await getToken();
 
 	const api = axios.create({
 		baseURL: 'https://mockapi-eng-box-app.vercel.app',
-		// headers: {
-		// 	Authorization: token,
-		// },
+		headers: {
+			Authorization: token,
+		},
 	});
 
 	return api;

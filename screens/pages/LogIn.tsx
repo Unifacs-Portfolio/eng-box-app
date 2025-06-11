@@ -40,7 +40,7 @@ export default function Login() {
 		try {
 			console.log('Iniciando');
 			const response = await axiosLogin.post<UserProfile>(
-				'https://mockapi-eng-box-app.vercel.app//api/usuario/login',
+				'https://mockapi-eng-box-app.vercel.app/api/usuario/login',
 				{
 					email: data.email,
 					senha: data.password,
