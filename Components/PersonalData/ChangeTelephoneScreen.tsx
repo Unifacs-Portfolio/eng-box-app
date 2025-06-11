@@ -32,7 +32,7 @@ const ChangeTelephoneScreen = () => {
 		try {
 			const api = await getApiAxios();
 			await api.put(`/api/usuario/alterar/${userProfile.email}`, {
-				senha: data.phoneNumber,
+				telefone: data.phoneNumber,
 			});
 			setUserProfile({ ...userProfile, telefone: data.phoneNumber });
 			setIsChanged(false);

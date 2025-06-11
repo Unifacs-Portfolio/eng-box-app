@@ -3,16 +3,12 @@ import { jwtDecode } from 'jwt-decode';
 import { TokenData } from '../types/token';
 import { axiosGeral } from '../../services/axios';
 
-let tokens: string | null = null;
-
 export const saveToken = async (token: string) => {
-	// await SecureStore.setItemAsync('token-session', token);
-	tokens = token;
+	await SecureStore.setItemAsync('token-session', token);
 };
 
 export const getToken = async () => {
-	// const token = await SecureStore.getItemAsync('token-session');
-	const token = tokens;
+	const token = await SecureStore.getItemAsync('token-session');
 	return token;
 };
 

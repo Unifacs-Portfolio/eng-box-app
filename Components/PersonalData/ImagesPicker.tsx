@@ -81,7 +81,7 @@ const ProfilePhotoPicker: React.FC = () => {
 				// Faça a requisição para a API
 				const response = await api.putForm(
 					`/api/usuario/${userProfile.email}`,
-					{ profilePhotoUrl: image.uri },
+					formData,
 				);
 
 				if (response.status === 200) {
