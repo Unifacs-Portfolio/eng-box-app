@@ -1,4 +1,3 @@
-import AntDesign from "@expo/vector-icons/AntDesign";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import {
   NavigationContainer,
@@ -10,11 +9,11 @@ import * as React from "react";
 import * as Screens from "./screens/index";
 
 import { useFonts } from "expo-font";
-import { View } from "react-native";
+import { View, Text } from "react-native";
 import { Platform } from "react-native";
 import { UserProvider } from "./Components/profile/UserContext";
 import { TabRoutes } from "./utils/enums/tab-routes";
-import { Text } from "react-native-paper";
+import { Icon } from "react-native-paper";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -48,16 +47,16 @@ function TabNavigator({ initialRouteName }: { initialRouteName: string }) {
 // Função para buscar o nome do icone e partir da propriedade focused(saber se o user está na página atual)
 // e a partir do nome da rota
 const getIconName = (routeName: string, focused?: boolean) => {
-  let iconName: "home" | "user" | "search1" | "pluscircleo" = "home";
+  let iconName: "home" | "account" | "magnify" | "plus-circle-outline" = "home";
 
   if (routeName === TabRoutes.HOME) {
     iconName = "home";
   } else if (routeName === TabRoutes.EXPLORE) {
-    iconName = "search1";
+    iconName = "magnify";
   } else if (routeName === TabRoutes.PROFILE) {
-    iconName = "user";
+    iconName = "account";
   } else if (routeName === TabRoutes.UPLOAD) {
-    iconName = "pluscircleo";
+    iconName = "plus-circle-outline";
   }
 
   return iconName;
@@ -84,8 +83,7 @@ const renderTabIcon = ({
         padding: 3,
       }}
     >
-      <AntDesign name={iconName} size={size} color={color} />
-      <Text className="text-base text-white">Fechar</Text>
+      <Icon source={iconName} size={32} color={color} />
     </View>
   );
 };

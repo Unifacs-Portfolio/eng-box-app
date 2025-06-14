@@ -9,6 +9,7 @@ import {
 import { getToken } from "../../utils/session/manager";
 import { NavigationProp } from "../../utils/types/navigation";
 import { StatusBar } from "expo-status-bar";
+import AntDesign from "react-native-vector-icons/AntDesign";
 
 export default function Wellcome() {
   const navigation = useNavigation<NavigationProp>();
