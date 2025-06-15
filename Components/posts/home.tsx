@@ -6,6 +6,8 @@ import { Post } from "../../utils/types/post";
 import { UserResponse } from "../../utils/types/user-response";
 import { Ionicons } from "@expo/vector-icons";
 import { Receita } from "../../utils/types/receitas";
+import { getApiAxios } from "../../services/axios";
+import { useUser } from "../profile/UserContext";
 type PostProps = {
   post: Receita;
 };
@@ -14,6 +16,7 @@ const PostComponent = ({ post }: PostProps) => {
   const imageUrl = post.fotos && post.fotos.length > 0 ? post.fotos[0] : "";
   const [userPost, setUserPost] = useState<UserResponse | null>(null);
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
+  const { getUsersByID } = useUser();
   const MAX_LINES = 3;
 
   // Retirar quando a api tiver funcionando
@@ -22,54 +25,33 @@ const PostComponent = ({ post }: PostProps) => {
     []
   );
 
-  const nomes: string[] = [
-    "Ana Silva",
-    "Carlos Souza",
-    "Mariana Lima",
-    "Pedro Oliveira",
-    "Julia Costa",
-    "Lucas Rocha",
-    "Fernanda Alves",
-    "Rafael Martins",
-  ];
-  const randomNome = useMemo(() => {
-    const indice = Math.floor(Math.random() * nomes.length);
-    return nomes[indice];
-  }, []);
-
-  // useFocusEffect(
-  //   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-  //   React.useCallback(() => {
-  //     // Do something when the screen is focused
-  //     (async () => {
-  //       // const user = await getUserDetailsByEmail(post.usuarioId);
-  //       // setUserPost(user);
-  //     })();
-  //     return () => {
-  //       // Do something when the screen is unfocused
-  //       // Useful for cleanup functions
-  //     };
-  //   }, [])
-  // );
+  useFocusEffect(
+    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+    React.useCallback(() => {
+      // Do something when the screen is focused
+      (async () => {
+        const data = await getUsersByID(post.usuarioId);
+        if (!data) return;
+        setUserPost(data);
+      })();
+      return () => {
+        // Do something when the screen is unfocused
+        // Useful for cleanup functions
+      };
+    }, [post.usuarioId])
+  );
 
   return (
     <View className="bg-white rounded-xl shadow-md mb-4">
       <View className=" px-4 py-1 rounded-tl-xl rounded-tr-xl">
         <View className="flex flex-row items-center gap-x-3 py-2">
           <View className="h-11 w-11">
-            {/* <Image
-              source={
-                userPost?.fotoUsu
-                  ? { uri: userPost?.fotoUsu }
-                  : require("../../assets/icons/iconsLogin/blank-user-photo.jpg")
-              }
-              className="w-full h-full rounded-full"
-              resizeMode="cover"
-            /> */}
             <Image
-              source={{
-                uri: `https://cataas.com/cat?id=${randomImageSeed}`,
-              }}
+              source={
+                userPost?.foto_usuario
+                  ? { uri: userPost?.foto_usuario }
+                  : { uri: `https://cataas.com/cat?id=${randomImageSeed}` }
+              }
               className="w-full h-full rounded-full"
               resizeMode="cover"
             />
@@ -80,9 +62,7 @@ const PostComponent = ({ post }: PostProps) => {
               className="text-sm"
               style={{ fontFamily: "poppins-semi-bold" }}
             >
-              {/* Descomentar quando api tiver pronta
-              {userPost?.nome || "Autor desconhecido"} */}
-              {randomNome}
+              {userPost?.nome || "autor desconhecido"}
             </Text>
 
             {userPost?.isMonitor && (

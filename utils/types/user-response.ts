@@ -6,4 +6,5 @@ export interface UserResponse {
   isMonitor: boolean;
   nivelConsciencia: number;
   telefone: string;
+  foto_usuario?: string;
 }

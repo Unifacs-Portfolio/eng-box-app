@@ -15,6 +15,7 @@ interface UserContextProps {
   userProfile: UserResponse;
   setUserProfile: React.Dispatch<React.SetStateAction<UserResponse>>;
   getUserDetails: () => Promise<UserResponse | undefined>;
+  getUsersByID: (userId: string) => Promise<UserResponse | undefined>;
 }
 
 const UserContext = createContext<UserContextProps | undefined>(undefined);
@@ -31,24 +32,33 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
       const payloadToken = await decryptToken(token);
       if (!payloadToken) return;
       const axios = await getApiAxios();
-      const { data: res } = await axios.get(
-        `/api/usuario/${payloadToken.email}`
-      );
+      const { data } = await axios.get(`/api/usuario/${payloadToken.userID}`);
 
       const userFormated: UserResponse = {
-        email: res.user.email,
-        fotoUsu: res.user.foto_usuario,
-        isMonitor: res.user.is_monitor,
-        nivelConsciencia: Number(res.user.nivel_consciencia),
-        nome: res.user.nome,
-        telefone: res.user.telefone,
+        id: data.user.id,
+        email: data.user.email,
+        fotoUsu: data.user.foto_usuario,
+        isMonitor: data.user.is_monitor,
+        nivelConsciencia: Number(data.user.nivel_consciencia),
+        nome: data.user.nome,
+        telefone: data.user.telefone,
       };
 
       setUserProfile(userFormated);
       return userFormated;
     } catch (error: any) {
-      console.log("Erro inesperado: ", error);
+      console.error("Erro inesperado: ", error);
     }
+  };
+  const getUsersByID = async (userId: string) => {
+    try {
+      const axios = await getApiAxios();
+      const { data } = await axios.get(`/api/usuario/${userId}`);
+      return data.user;
+    } catch (error: any) {
+      // console.error("Erro inesperado: ", error);
+    }
+    return;
   };
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
@@ -72,7 +82,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
 
   return (
     <UserContext.Provider
-      value={{ userProfile, setUserProfile, getUserDetails }}
+      value={{ userProfile, setUserProfile, getUserDetails, getUsersByID }}
     >
       {children}
     </UserContext.Provider>
