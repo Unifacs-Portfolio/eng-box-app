@@ -10,28 +10,34 @@ import { NavigationProp } from "../../utils/types/navigation";
 import { Post } from "../../utils/types/post";
 import Spinner from "../../Components/spinner";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import { Receita, ReceitasResponse } from "../../utils/types/receitas";
+import { useUser } from "../../Components/profile/UserContext";
 
 const Home = () => {
-  const [posts, setPosts] = useState<Post[]>([]);
+  const [posts, setPosts] = useState<Receita[]>([]);
   const [loading, setLoading] = useState(false);
   const navigation = useNavigation<NavigationProp>();
+  const { userProfile } = useUser();
 
-  // const fetchPosts = async () => {
-  //   try {
-  //     const api = await getApiAxios();
-  //     const response = await api.get("/api/receitas");
-  //     const sortedPosts = response.data.sort(
-  //       (a: Post, b: Post) =>
-  //         new Date(b.dataCriacao).getTime() - new Date(a.dataCriacao).getTime()
-  //     );
-  //     setPosts(sortedPosts);
-  //   } catch (error) {
-  //     console.error("Erro ao buscar posts:", error);
-  //     Alert.alert("Erro", "Não foi possível carregar as Postagens");
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
+  const fetchPosts = async () => {
+    try {
+      const api = await getApiAxios();
+      setLoading(true);
+      const { data } = await api.get<ReceitasResponse>("/api/receitas");
+      // const sortedPosts = data.sort(
+      //   (a: Post, b: Post) =>
+      //     new Date(b.dataCriacao).getTime() - new Date(a.dataCriacao).getTime()
+      // );
+      // console.log(sortedPosts);
+      setPosts(data.receitas);
+      setLoading(false);
+    } catch (error) {
+      console.error("Erro ao buscar posts:", error);
+      Alert.alert("Erro", "Não foi possível carregar as Postagens");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useFocusEffect(
     // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
@@ -45,7 +51,7 @@ const Home = () => {
           return;
         }
 
-        // fetchPosts();
+        await fetchPosts();
       })();
       return () => {
         // Do something when the screen is unfocused
@@ -54,7 +60,7 @@ const Home = () => {
     }, [])
   );
 
-  const renderPost = ({ item }: { item: Post }) => (
+  const renderPost = ({ item }: { item: Receita }) => (
     <View className="mb-8">
       <PostComponent post={item} />
     </View>
@@ -68,7 +74,7 @@ const Home = () => {
         data={posts}
         keyExtractor={(item) => item.id.toString()}
         renderItem={renderPost}
-        ListHeaderComponent={<HomeHeader username="john.doe" />}
+        ListHeaderComponent={<HomeHeader username={userProfile.nome} />}
         contentContainerStyle={{ paddingBottom: 45 }}
       />
     </View>

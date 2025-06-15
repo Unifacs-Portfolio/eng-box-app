@@ -35,8 +35,6 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
         `/api/usuario/${payloadToken.email}`
       );
 
-      console.log(res.user);
-
       const userFormated: UserResponse = {
         email: res.user.email,
         fotoUsu: res.user.foto_usuario,

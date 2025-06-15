@@ -1,12 +1,13 @@
 import { useFocusEffect } from "@react-navigation/native";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { Image, Text, TouchableOpacity, View } from "react-native";
 import { getUserDetailsByEmail } from "../../utils/session/user-data";
 import { Post } from "../../utils/types/post";
 import { UserResponse } from "../../utils/types/user-response";
 import { Ionicons } from "@expo/vector-icons";
+import { Receita } from "../../utils/types/receitas";
 type PostProps = {
-  post: Post;
+  post: Receita;
 };
 
 const PostComponent = ({ post }: PostProps) => {
@@ -15,31 +16,60 @@ const PostComponent = ({ post }: PostProps) => {
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
   const MAX_LINES = 3;
 
-  useFocusEffect(
-    React.useCallback(() => {
-      // Do something when the screen is focused
-      (async () => {
-        const user = await getUserDetailsByEmail(post.idUsuario);
-        setUserPost(user);
-      })();
-      return () => {
-        // Do something when the screen is unfocused
-        // Useful for cleanup functions
-      };
-    }, [])
+  // Retirar quando a api tiver funcionando
+  const randomImageSeed = useMemo(
+    () => Math.floor(Math.random() * 1000) + 1,
+    []
   );
 
+  const nomes: string[] = [
+    "Ana Silva",
+    "Carlos Souza",
+    "Mariana Lima",
+    "Pedro Oliveira",
+    "Julia Costa",
+    "Lucas Rocha",
+    "Fernanda Alves",
+    "Rafael Martins",
+  ];
+  const randomNome = useMemo(() => {
+    const indice = Math.floor(Math.random() * nomes.length);
+    return nomes[indice];
+  }, []);
+
+  // useFocusEffect(
+  //   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  //   React.useCallback(() => {
+  //     // Do something when the screen is focused
+  //     (async () => {
+  //       // const user = await getUserDetailsByEmail(post.usuarioId);
+  //       // setUserPost(user);
+  //     })();
+  //     return () => {
+  //       // Do something when the screen is unfocused
+  //       // Useful for cleanup functions
+  //     };
+  //   }, [])
+  // );
+
   return (
-    <View>
-      <View className="bg-primaryGray px-4 py-1 rounded-tl-xl rounded-tr-xl">
-        <View className="flex flex-row items-center gap-x-3">
+    <View className="bg-white rounded-xl shadow-md mb-4">
+      <View className=" px-4 py-1 rounded-tl-xl rounded-tr-xl">
+        <View className="flex flex-row items-center gap-x-3 py-2">
           <View className="h-11 w-11">
-            <Image
+            {/* <Image
               source={
                 userPost?.fotoUsu
                   ? { uri: userPost?.fotoUsu }
                   : require("../../assets/icons/iconsLogin/blank-user-photo.jpg")
               }
+              className="w-full h-full rounded-full"
+              resizeMode="cover"
+            /> */}
+            <Image
+              source={{
+                uri: `https://cataas.com/cat?id=${randomImageSeed}`,
+              }}
               className="w-full h-full rounded-full"
               resizeMode="cover"
             />
@@ -50,7 +80,9 @@ const PostComponent = ({ post }: PostProps) => {
               className="text-sm"
               style={{ fontFamily: "poppins-semi-bold" }}
             >
-              {userPost?.nome || "Autor desconhecido"}
+              {/* Descomentar quando api tiver pronta
+              {userPost?.nome || "Autor desconhecido"} */}
+              {randomNome}
             </Text>
 
             {userPost?.isMonitor && (
@@ -70,8 +102,9 @@ const PostComponent = ({ post }: PostProps) => {
         </View>
       </View>
 
-      <View className="h-[430px] w-[430px] self-center">
-        {imageUrl ? (
+      <View className="h-[430px] w-[430px] self-center w-full">
+        {/* Corrigir quando a api estiver 100% */}
+        {/* {imageUrl ? (
           <Image
             source={{ uri: imageUrl as any }}
             className="w-full h-full"
@@ -79,7 +112,14 @@ const PostComponent = ({ post }: PostProps) => {
           />
         ) : (
           <Text className="text-center">Imagem não disponível</Text>
-        )}
+        )} */}
+        <Image
+          source={{
+            uri: `https://picsum.photos/300/300?random=${randomImageSeed}`,
+          }}
+          className="w-full h-full"
+          resizeMode="cover"
+        />
       </View>
 
       <View className="mx-3 mt-4 space-y-1">
@@ -106,6 +146,7 @@ const PostComponent = ({ post }: PostProps) => {
           </TouchableOpacity>
         )}
       </View>
+      <View className="h-[2px] bg-gray-200 w-full mt-4" />
     </View>
   );
 };

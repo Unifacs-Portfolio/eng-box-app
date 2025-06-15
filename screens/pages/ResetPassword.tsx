@@ -1,20 +1,19 @@
-import { RouteProp } from '@react-navigation/native';
-import { RootStackParamList } from '../../utils/types/navigation';
-import ChangePasswordForm from './../../Components/forms/ChangePasswordForm';
+import { RouteProp } from "@react-navigation/native";
+import { RootStackParamList } from "../../utils/types/navigation";
+import ChangePasswordForm from "./../../Components/forms/ChangePasswordForm";
+import { StackScreenProps } from "@react-navigation/stack";
 
 type ResetPasswordScreenScreenRouteProp = RouteProp<
-	RootStackParamList,
-	'ResetPassword'
+  RootStackParamList,
+  "ResetPassword"
 >;
 
-type ResetPasswordProps = {
-	route: ResetPasswordScreenScreenRouteProp;
-};
+type ResetPasswordProps = StackScreenProps<RootStackParamList, "ResetPassword">;
 
-const ResetPassword = ({ route }: ResetPasswordProps) => {
-	const { email } = route.params;
+const ResetPassword: React.FC<ResetPasswordProps> = ({ route, navigation }) => {
+  const { email } = route.params;
 
-	return <ChangePasswordForm email={email} />;
+  return <ChangePasswordForm email={email} />;
 };
 
 export default ResetPassword;

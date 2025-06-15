@@ -15,7 +15,7 @@ import { ScrollView } from "react-native-gesture-handler";
 import { getApiAxios } from "../../services/axios";
 import { UserResponse } from "../../utils/types/user-response";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
-import { getUserDetails } from "../../utils/session/user-data";
+// import { getUserDetails } from "../../utils/session/user-data";
 import { getToken } from "../../utils/session/manager";
 import { NavigationProp } from "../../utils/types/navigation";
 import Spinner from "../spinner";
@@ -59,6 +59,7 @@ const AddHint = () => {
   };
 
   useFocusEffect(
+    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
     React.useCallback(() => {
       (async () => {
         const token = await getToken();
@@ -66,9 +67,6 @@ const AddHint = () => {
           alert("Você precisa realizar o Login para acessar!");
           navigation.navigate("Login");
           return;
-        } else {
-          const user = await getUserDetails();
-          setUserProfile(user as UserResponse);
         }
         setLoading(false);
       })();

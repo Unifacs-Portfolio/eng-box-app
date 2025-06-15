@@ -8,33 +8,43 @@ import ProfileImagesSection from "../../Components/profile/ProfileImagesSection"
 import ProfileInfo from "../../Components/profile/ProfileInfo";
 import Spinner from "../../Components/spinner";
 import { getApiAxios } from "../../services/axios";
-import { getToken } from "../../utils/session/manager";
-import { getUserDetails } from "../../utils/session/user-data";
+import { decryptToken, getToken } from "../../utils/session/manager";
+// import { getUserDetails } from "../../utils/session/user-data";
 import { NavigationProp } from "../../utils/types/navigation";
 import { Post } from "../../utils/types/post";
 import { UserResponse } from "../../utils/types/user-response";
 import { removeRememberMeData } from "../../utils/async-storage/user-data";
+import { useUser } from "../../Components/profile/UserContext";
+import { Receita, ReceitasResponse } from "../../utils/types/receitas";
 
 const Profile = () => {
   const navigation = useNavigation<NavigationProp>();
-  const [userProfile, setUserProfile] = useState<UserResponse | null>(null);
-  const [userPostagens, setUserPostagens] = useState<Post[]>([]);
+  // const [userProfile, setUserProfile] = useState<UserResponse | null>(null);
+  const [userPostagens, setUserPostagens] = useState<Receita[]>([]);
   const [loading, setLoading] = useState(true);
+  const { userProfile, setUserProfile } = useUser();
 
-  const fetchUserPosts = async (userEmail: string) => {
+  const fetchUserPosts = async () => {
+    const token = await getToken();
+    if (!token) return;
+    const payloadToken = await decryptToken(token);
+    if (!payloadToken) return;
     try {
       const api = await getApiAxios();
-      const response = await api.get("/api/receitas");
-      const userPosts = response.data
-        .filter((posts: Post) => posts.idUsuario === userEmail)
-        .sort(
-          (a: Post, b: Post) =>
-            new Date(b.dataCriacao).getTime() -
-            new Date(a.dataCriacao).getTime()
-        );
+      const { data } = await api.get<ReceitasResponse>("/api/receitas");
+      // const userPosts = response.data
+      //   .filter((posts: Post) => posts.idUsuario === payloadToken.userID)
+      //   .sort(
+      //     (a: Post, b: Post) =>
+      //       new Date(b.dataCriacao).getTime() -
+      //       new Date(a.dataCriacao).getTime()
+      //   );
 
-      setUserPostagens(userPosts);
-      console.log("Postagens filtradas", userPosts);
+      const newsPosts = data.receitas.filter(
+        (post) => post.usuarioId === payloadToken.userID
+      );
+
+      setUserPostagens(newsPosts);
     } catch (error) {
       console.error("Erro ao carregar as postagens:", error);
       Alert.alert("Erro", "Não foi possível carregar os dados do perfil.");
@@ -52,14 +62,14 @@ const Profile = () => {
           navigation.navigate("Login");
           return;
         } else {
-          const user = await getUserDetails();
-          setUserProfile(user);
-
-          if (user) {
-            console.log("Buscando postagens...");
-            await fetchUserPosts(user.email);
-          }
+          // const user = await getUserDetails();
+          // setUserProfile(user);
+          // if (user) {
+          //   console.log("Buscando postagens...");
+          //   await fetchUserPosts(user.email);
+          // }
         }
+        fetchUserPosts();
         setLoading(false);
       })();
       return () => {

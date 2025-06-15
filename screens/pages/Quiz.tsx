@@ -208,10 +208,8 @@ const Quiz = () => {
               try {
                 if (score === 0) score += 1;
 
-                const user = await getUserDetails();
-
                 const api = await getApiAxios();
-                await api.put(`/api/usuario/${user?.email}`, {
+                await api.put(`/api/usuario/${userProfile.email}`, {
                   nivelConsciencia: score,
                 });
 

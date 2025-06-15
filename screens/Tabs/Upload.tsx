@@ -21,10 +21,10 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import Spinner from "../../Components/spinner";
 import { getApiAxios } from "../../services/axios";
 import { getToken } from "../../utils/session/manager";
-import { getUserDetails } from "../../utils/session/user-data";
 import { UploadFormData } from "../../utils/types/form/formData";
 import { NavigationProp } from "../../utils/types/navigation";
 import { UserResponse } from "../../utils/types/user-response";
+import { useUser } from "../../Components/profile/UserContext";
 
 const Upload = () => {
   const [media, setMedia] = React.useState<string | null>(null);
@@ -36,9 +36,10 @@ const Upload = () => {
   const [successfulUploadModalVisible, setSuccessfulUploadModalVisible] =
     React.useState(false);
   const [loading, setLoading] = useState(true);
-  const [user, setUserProfile] = useState<UserResponse | undefined>(undefined);
+  // const [user, setUserProfile] = useState<UserResponse | undefined>(undefined);
   const [imageErrorModalVisible, setImageErrorModalVisible] =
     React.useState<boolean>(false);
+  const { userProfile, setUserProfile } = useUser();
 
   const navigation = useNavigation<NavigationProp>();
 
@@ -51,16 +52,22 @@ const Upload = () => {
         type: data.fotos[0].type ?? "image/jpeg",
       };
 
-      const formData = new FormData();
-      formData.append("files", imageCover);
-      formData.append("tema", "Enge");
-      formData.append("subtema", "Enge");
-      formData.append("idUsuario", user?.email ?? "");
-      formData.append("titulo", data.titulo);
-      formData.append("conteudo", data.conteudo);
+      // const formData = new FormData();
+      // formData.append("files", imageCover);
+      // formData.append("tema", "Enge");
+      // formData.append("subtema", "Enge");
+      // formData.append("idUsuario", user?.email ?? "");
+      // formData.append("titulo", data.titulo);
+      // formData.append("conteudo", data.conteudo);
 
       const api = await getApiAxios();
-      await api.postForm("/api/receitas", formData);
+      await api.post("/api/receitas", {
+        titulo: data.titulo,
+        conteudo: data.conteudo,
+        email: userProfile.email,
+        tema: data.tema,
+        subtemas: ["Testando", "testando2"],
+      });
 
       setSuccessfulUploadModalVisible(true);
     } catch (error: any) {
@@ -82,6 +89,7 @@ const Upload = () => {
   };
 
   useFocusEffect(
+    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
     React.useCallback(() => {
       (async () => {
         const token = await getToken();
@@ -89,10 +97,11 @@ const Upload = () => {
           alert("Você precisa realizar o Login para acessar!");
           navigation.navigate("Login");
           return;
-        } else {
-          const user = await getUserDetails();
-          setUserProfile(user as UserResponse);
         }
+        // } else {
+        //   const user = await getUserDetails();
+        //   setUserProfile(user as UserResponse);
+        // }
         setLoading(false);
       })();
       return () => {
@@ -110,7 +119,7 @@ const Upload = () => {
 
     if (!result.canceled) {
       const selectedAsset = result.assets[0];
-      const fileSizeInMB = selectedAsset.fileSize / (1024 * 1024);
+      const fileSizeInMB = (selectedAsset.fileSize ?? 0) / (1024 * 1024);
 
       if (fileSizeInMB > 5) {
         setImageErrorModalVisible(true);

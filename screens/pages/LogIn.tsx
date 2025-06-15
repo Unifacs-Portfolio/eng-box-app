@@ -23,12 +23,14 @@ import { getToken, saveToken } from "../../utils/session/manager";
 import { LoginFormData } from "../../utils/types/form/formData";
 import { NavigationProp } from "../../utils/types/navigation";
 import { TokenResponse } from "../../utils/types/token";
+import { useUser } from "../../Components/profile/UserContext";
 
 export default function Login() {
   const navigation = useNavigation<NavigationProp>();
   const [rememberMe, setRememberMe] = useState(false);
   const { control, handleSubmit, formState, reset } = useForm<LoginFormData>();
   const { isSubmitting } = formState;
+  const { getUserDetails } = useUser();
 
   const [showPassword, setShowPassword] = React.useState<boolean>(false);
 
@@ -49,6 +51,8 @@ export default function Login() {
       } else {
         await removeRememberMeData();
       }
+
+      await getUserDetails();
 
       alert("Login realizado com sucesso!");
       reset();

@@ -12,14 +12,13 @@ import {
   NavigationProp,
   RootStackParamList,
 } from "../../utils/types/navigation";
+import { StackScreenProps } from "@react-navigation/stack";
 
 type QuizResultScreenRouteProp = RouteProp<RootStackParamList, "QuizzResult">;
 
-type QuizResultProps = {
-  route: QuizResultScreenRouteProp;
-};
+type QuizResultProps = StackScreenProps<RootStackParamList, "QuizzResult">;
 
-const QuizzResult = ({ route }: QuizResultProps) => {
+const QuizzResult: React.FC<QuizResultProps> = ({ route }) => {
   const { score } = route.params;
   const navigation = useNavigation<NavigationProp>();
 

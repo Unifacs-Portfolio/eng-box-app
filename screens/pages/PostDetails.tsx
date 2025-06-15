@@ -43,6 +43,7 @@ const PostDetails = () => {
   };
 
   useFocusEffect(
+    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
     React.useCallback(() => {
       // Do something when the screen is focused
       (async () => {
@@ -86,6 +87,12 @@ const PostDetails = () => {
       ]
     );
   };
+
+  // Retirar quando a api tiver funcionando
+  const randomImageSeed = React.useMemo(
+    () => Math.floor(Math.random() * 1000) + 1,
+    []
+  );
 
   return (
     <PaperProvider>
@@ -141,7 +148,9 @@ const PostDetails = () => {
 
             {/* Imagem do Post */}
             <Image
-              source={{ uri: imageUrl }}
+              source={{
+                uri: `https://picsum.photos/300/300?random=${randomImageSeed}`,
+              }}
               className="w-full h-[45vh] mt-4"
               resizeMode="cover"
             />
