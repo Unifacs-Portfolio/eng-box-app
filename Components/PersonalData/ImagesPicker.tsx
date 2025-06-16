@@ -54,13 +54,15 @@ const ProfilePhotoPicker: React.FC = () => {
 
         const isUpadatedImage = await uploadImage(file);
 
-        if (isUpadatedImage) {
-          setUserProfile((preUserProfile) => ({
-            ...preUserProfile,
-            fotoUsu: file.uri,
-          }));
-          showSuccessModal();
-        }
+        // if (isUpadatedImage) {
+        //   setUserProfile((preUserProfile) => ({
+        //     ...preUserProfile,
+        //     fotoUsu: file.uri,
+        //   }));
+        //   showSuccessModal();
+        // }
+        await getUserDetails();
+        showSuccessModal();
       }
     }
   };
@@ -68,24 +70,25 @@ const ProfilePhotoPicker: React.FC = () => {
   const uploadImage = async (image: ImagePicker.ImagePickerAsset) => {
     try {
       if (userProfile) {
-        // A api so aceita uma string, não um objeto
+        const imageCover: any = {
+          uri: image.uri,
+          name: image.fileName ?? `photo-${Date.now()}.jpg`,
+          type: image.mimeType ?? "image/jpeg",
+        };
 
-        // const imageCover: any = {
-        //   uri: image.uri,
-        //   name: image.fileName ?? "unknown.jpg",
-        //   type: image.mimeType ?? "image/jpeg",
-        // };
-
-        // const formData = new FormData();
-        // formData.append("fotoUsu", imageCover);
+        const formData = new FormData();
+        formData.append("avatar", imageCover);
 
         const api = await getApiAxios();
 
-        // Faça a requisição para a API
         const response = await api.put(
-          `/api/usuario/${userProfile.email}`,
-          { foto_usuario: image.uri }
-          // formData
+          `/api/usuario/${userProfile.id}`,
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
         );
 
         if (response.status === 200) {
@@ -100,38 +103,38 @@ const ProfilePhotoPicker: React.FC = () => {
         console.error("Status do erro:", error.response.status);
         console.error("Cabeçalhos do erro:", error.response.headers);
       } else if (error.request) {
-        // Erro na requisição, mas sem resposta (ex.: problema de rede)
         console.error("Erro na requisição:", error.request);
       } else {
-        // Outro tipo de erro
         console.error("Erro geral:", error.message);
       }
       alert("Erro ao atualizar foto de perfil");
     }
   };
 
-  const removeImage = async (): Promise<void> => {
-    if (!userProfile) {
-      await getUserDetails();
-    } else {
-      try {
-        const api = await getApiAxios();
-        await api.put(
-          `/api/usuario/${userProfile.email}`,
-          { foto_usuario: "" }
-          // formData
-        );
-        setUserProfile((preUserProfile) => ({
-          ...preUserProfile,
-          fotoUsu: "",
-        }));
-        showSuccessModal();
-      } catch (error: any) {
-        console.error(error);
-        alert("Erro ao tentar remover a imagem");
-      }
-    }
-  };
+  // const removeImage = async (): Promise<void> => {
+  //   try {
+  //     if (!userProfile) return;
+
+  //     const formData = new FormData();
+  //     formData.append("avatar", "");
+
+  //     const api = await getApiAxios();
+  //     const response = await api.put(
+  //       `/api/usuario/${userProfile.id}`,
+  //       formData,
+  //       {
+  //         headers: {
+  //           "Content-Type": "multipart/form-data",
+  //         },
+  //       }
+  //     );
+  //     await getUserDetails();
+  //     showSuccessModal();
+  //   } catch (error: any) {
+  //     console.error(error);
+  //     alert("Erro ao tentar remover a imagem");
+  //   }
+  // };
 
   const showSuccessModal = (): void => {
     setSuccessModalVisible(true);
@@ -186,7 +189,7 @@ const ProfilePhotoPicker: React.FC = () => {
               Deseja alterar a foto de perfil?
             </Text>
             <View className="flex-row justify-center gap-2 my-4">
-              <TouchableOpacity
+              {/* <TouchableOpacity
                 onPress={() => {
                   removeImage();
                   setModalVisible(false);
@@ -199,7 +202,7 @@ const ProfilePhotoPicker: React.FC = () => {
                 >
                   Remover
                 </Text>
-              </TouchableOpacity>
+              </TouchableOpacity> */}
 
               <TouchableOpacity
                 onPress={() => {

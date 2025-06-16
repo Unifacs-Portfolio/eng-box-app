@@ -3,6 +3,7 @@ import {
   useFocusEffect,
   useNavigation,
   useRoute,
+  RouteProp,
 } from "@react-navigation/native";
 import * as React from "react";
 import {
@@ -19,14 +20,23 @@ import { getApiAxios } from "../../services/axios";
 import { getToken } from "../../utils/session/manager";
 import { NavigationProp } from "../../utils/types/navigation";
 import { useState } from "react";
+
+// Defina o tipo dos parâmetros esperados
+type PostDetailsParams = {
+  id: string;
+  imageUrl?: string;
+  titulo: string;
+  conteudo: string;
+};
 const PostDetails = () => {
   const navigation = useNavigation<NavigationProp>();
-  const route = useRoute();
-  const { id, imageUrl, titulo, conteudo } = route.params; // Parâmetros passados pela navegação
+  const route =
+    useRoute<RouteProp<Record<string, PostDetailsParams>, string>>();
+  const { id, imageUrl, titulo, conteudo } = route.params as PostDetailsParams; // Faz o cast para o tipo correto
   const [contextMenuVisible, setContextMenuVisible] =
     React.useState<boolean>(false);
 
-  const removePost = async (postId: number) => {
+  const removePost = async (postId: string) => {
     try {
       const api = await getApiAxios();
       const response = await api.delete(`/api/receitas/${postId}`);
@@ -149,7 +159,9 @@ const PostDetails = () => {
             {/* Imagem do Post */}
             <Image
               source={{
-                uri: `https://picsum.photos/300/300?random=${randomImageSeed}`,
+                uri:
+                  imageUrl ||
+                  `https://picsum.photos/300/300?random=${randomImageSeed}`,
               }}
               className="w-full h-[45vh] mt-4"
               resizeMode="cover"

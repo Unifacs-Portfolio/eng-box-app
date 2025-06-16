@@ -21,11 +21,11 @@ export interface newPasswordFormData {
 }
 
 export interface UploadFormData {
-  subtemas: string;
+  subtemas: string[];
   tema: string;
   titulo: string;
   conteudo: string;
-  fotos: Foto[];
+  files: Foto[];
 }
 
 export interface HintFormData {

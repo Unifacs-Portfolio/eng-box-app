@@ -39,7 +39,7 @@ const ChangePasswordScreen = () => {
   const onSubmit = async (data: { newPassword: string }) => {
     try {
       const api = await getApiAxios();
-      await api.put(`/api/usuario/${userProfile.email}`, {
+      await api.put(`/api/usuario/${userProfile.id}`, {
         senha: data.newPassword,
       });
 

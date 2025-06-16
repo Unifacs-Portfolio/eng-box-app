@@ -17,6 +17,20 @@ export const getApiAxios = async () => {
 
   return api;
 };
+
+export const postReceitasAxios = async () => {
+  const token = await getToken();
+
+  const api = axios.create({
+    baseURL: process.env.API_URL,
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "multipart/form-data",
+    },
+  });
+
+  return api;
+};
 export const PostApiAxios = axios.create({
   baseURL: process.env.API_URL,
 });

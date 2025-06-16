@@ -19,7 +19,7 @@ import { Keyboard } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import Spinner from "../../Components/spinner";
-import { getApiAxios } from "../../services/axios";
+import { getApiAxios, postReceitasAxios } from "../../services/axios";
 import { getToken } from "../../utils/session/manager";
 import { UploadFormData } from "../../utils/types/form/formData";
 import { NavigationProp } from "../../utils/types/navigation";
@@ -29,6 +29,9 @@ import { useUser } from "../../Components/profile/UserContext";
 const Upload = () => {
   const [media, setMedia] = React.useState<string | null>(null);
   const [mediaType, setMediaType] = React.useState<"image" | "video" | null>(
+    null
+  );
+  const [fileName, setFileName] = React.useState<string | null | undefined>(
     null
   );
   const [titulo, setTitulo] = React.useState("");
@@ -47,27 +50,26 @@ const Upload = () => {
     try {
       setLoading(true);
       const imageCover: any = {
-        uri: data.fotos[0].uri,
-        name: data.fotos[0].name ?? "unknown.jpg",
-        type: data.fotos[0].type ?? "image/jpeg",
+        uri: data.files[0].uri,
+        name: data.files[0].name ?? `photo-${Date.now()}.jpg`,
+        type: data.files[0].type ?? "image/jpeg",
       };
 
-      // const formData = new FormData();
-      // formData.append("files", imageCover);
-      // formData.append("tema", "Enge");
-      // formData.append("subtema", "Enge");
-      // formData.append("idUsuario", user?.email ?? "");
-      // formData.append("titulo", data.titulo);
-      // formData.append("conteudo", data.conteudo);
+      const formData = new FormData();
+      formData.append("titulo", data.titulo);
+      formData.append("conteudo", data.conteudo);
+      formData.append("email", userProfile.email);
+      formData.append("tema", data.tema);
+      if (data.subtemas && Array.isArray(data.subtemas)) {
+        // biome-ignore lint/complexity/noForEach: <explanation>
+        data.subtemas.forEach((subtema) => {
+          formData.append("subtemas[]", subtema);
+        });
+      }
+      formData.append("fotos", imageCover);
 
-      const api = await getApiAxios();
-      await api.post("/api/receitas", {
-        titulo: data.titulo,
-        conteudo: data.conteudo,
-        email: userProfile.email,
-        tema: data.tema,
-        subtemas: ["Testando", "testando2"],
-      });
+      const api = await postReceitasAxios();
+      await api.post("/api/receitas", formData);
 
       setSuccessfulUploadModalVisible(true);
     } catch (error: any) {
@@ -127,6 +129,7 @@ const Upload = () => {
       }
 
       setMedia(selectedAsset.uri);
+      setFileName(selectedAsset.fileName);
       setMediaType("image");
     }
   };
@@ -153,11 +156,11 @@ const Upload = () => {
     titulo: titulo,
     conteudo: conteudo,
     tema: "Enge",
-    subtemas: "Enge",
-    fotos: [
+    subtemas: ["Enge"],
+    files: [
       {
         uri: media ?? "",
-        name: "uploaded_media.jpg",
+        name: fileName ?? `photo-${Date.now()}.jpg`,
         type: mediaType === "image" ? "image/jpeg" : "video/mp4",
       },
     ],

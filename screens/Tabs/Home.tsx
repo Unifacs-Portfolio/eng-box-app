@@ -29,6 +29,7 @@ const Home = () => {
       //     new Date(b.dataCriacao).getTime() - new Date(a.dataCriacao).getTime()
       // );
       // console.log(sortedPosts);
+      // console.log(data.receitas[data.receitas.length - 1]);
       setPosts(data.receitas);
       setLoading(false);
     } catch (error) {

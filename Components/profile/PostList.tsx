@@ -23,27 +23,55 @@ const PostList: React.FC<PostListProps> = ({ posts }) => {
   );
 
   // Função que renderiza cada item da lista
-  const renderPostItem = ({ item }: { item: Post }) => (
-    <TouchableOpacity
-      className="border-r border-b border-[#B8B8B8]"
-      style={{ width: width / 3 - 1 }}
-      onPress={() =>
-        navigation.navigate("PostDetails", {
-          id: item.id,
-          imageUrl: item.fotos[0] || "",
-          titulo: item.titulo,
-          conteudo: item.conteudo,
-        })
+  const renderPostItem = ({ item }: { item: Receita }) => {
+    const fotosString = item.fotos || "[]";
+    let imageUrl: string | null = null;
+    try {
+      const parsed = JSON.parse(fotosString);
+      // Se for array e tiver pelo menos uma imagem, pega a primeira
+      if (
+        Array.isArray(parsed) &&
+        parsed.length > 0 &&
+        typeof parsed[0] === "string"
+      ) {
+        imageUrl = parsed[0];
+      } else if (typeof parsed === "string") {
+        imageUrl = parsed;
       }
-    >
-      <Image
-        source={{
-          uri: `https://picsum.photos/300/300?random=${randomImageSeed}`,
-        }} // dando erro por conta do any em navigation
-        className="w-[140.33px] h-[140.33px]"
-      />
-    </TouchableOpacity>
-  );
+    } catch {
+      imageUrl = null;
+    }
+    return (
+      <TouchableOpacity
+        className="border-r border-b border-[#B8B8B8]"
+        style={{ width: width / 3 - 1 }}
+        onPress={() =>
+          navigation.navigate("PostDetails", {
+            id: item.id,
+            imageUrl: imageUrl,
+            titulo: item.titulo,
+            conteudo: item.conteudo,
+          })
+        }
+      >
+        {imageUrl ? (
+          <Image
+            source={{
+              uri: imageUrl,
+            }}
+            className="w-[140.33px] h-[140.33px]"
+          />
+        ) : (
+          <Image
+            source={{
+              uri: `https://picsum.photos/300/300?random=${randomImageSeed}`,
+            }}
+            className="w-[140.33px] h-[140.33px]"
+          />
+        )}
+      </TouchableOpacity>
+    );
+  };
 
   return (
     <FlatList

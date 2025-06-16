@@ -32,7 +32,7 @@ const ChangeTelephoneScreen = () => {
   const onSubmit = async (data: { phoneNumber: string }) => {
     try {
       const api = await getApiAxios();
-      await api.put(`/api/usuario/${userProfile.email}`, {
+      await api.put(`/api/usuario/${userProfile.id}`, {
         telefone: data.phoneNumber,
       });
 

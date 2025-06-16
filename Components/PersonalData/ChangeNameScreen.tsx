@@ -44,7 +44,7 @@ const ChangeNameScreen = () => {
           const formattedName = capitalizeName(data.name);
 
           const api = await getApiAxios();
-          await api.put(`/api/usuario/${userProfile.email}`, {
+          await api.put(`/api/usuario/${userProfile.id}`, {
             nome: formattedName,
           });
 

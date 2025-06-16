@@ -32,12 +32,9 @@ const ChangeEmailScreen = () => {
   const onSubmit = async (data: { email: string }) => {
     try {
       const api = await getApiAxios();
-      const { data: email } = await api.put(
-        `/api/usuario/${userProfile.email}`,
-        {
-          email: data.email,
-        }
-      );
+      const { data: email } = await api.put(`/api/usuario/${userProfile.id}`, {
+        email: data.email,
+      });
       setUserProfile((prevUserProfile) => ({
         ...prevUserProfile,
         email: email,

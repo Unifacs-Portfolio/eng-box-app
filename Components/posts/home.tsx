@@ -13,7 +13,7 @@ type PostProps = {
 };
 
 const PostComponent = ({ post }: PostProps) => {
-  const imageUrl = post.fotos && post.fotos.length > 0 ? post.fotos[0] : "";
+  // console.log(imageUrl);
   const [userPost, setUserPost] = useState<UserResponse | null>(null);
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
   const { getUsersByID } = useUser();
@@ -40,6 +40,29 @@ const PostComponent = ({ post }: PostProps) => {
       };
     }, [post.usuarioId])
   );
+  // if (!post.fotos) return null;
+  // const fotosArray = JSON.parse(post.fotos);
+  // console.log(fotosArray);
+  // const imageUrl = fotosArray[0];
+  // console.log(imageUrl);
+
+  const fotosString = post.fotos || "[]";
+  let imageUrl: string | null = null;
+  try {
+    const parsed = JSON.parse(fotosString);
+    // Se for array e tiver pelo menos uma imagem, pega a primeira
+    if (
+      Array.isArray(parsed) &&
+      parsed.length > 0 &&
+      typeof parsed[0] === "string"
+    ) {
+      imageUrl = parsed[0];
+    } else if (typeof parsed === "string") {
+      imageUrl = parsed;
+    }
+  } catch {
+    imageUrl = null;
+  }
 
   return (
     <View className="bg-white rounded-xl shadow-md mb-4">
@@ -84,22 +107,15 @@ const PostComponent = ({ post }: PostProps) => {
 
       <View className="h-[430px] w-[430px] self-center w-full">
         {/* Corrigir quando a api estiver 100% */}
-        {/* {imageUrl ? (
+        {imageUrl ? (
           <Image
-            source={{ uri: imageUrl as any }}
+            source={{ uri: imageUrl }}
             className="w-full h-full"
             resizeMode="cover"
           />
         ) : (
           <Text className="text-center">Imagem não disponível</Text>
-        )} */}
-        <Image
-          source={{
-            uri: `https://picsum.photos/300/300?random=${randomImageSeed}`,
-          }}
-          className="w-full h-full"
-          resizeMode="cover"
-        />
+        )}
       </View>
 
       <View className="mx-3 mt-4 space-y-1">
