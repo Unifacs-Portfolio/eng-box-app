@@ -10,8 +10,17 @@
   - Yago Mário ([Github](https://github.com/yagooc1))
   - Arthur Victor
   - Vitor Vitoriano
+- Time de Manutenção:
+  - Pedro Henrique Fernandes
+  - Felipe Borges
+  - Sinval Luz
+  - João Marcos Passos
+  - Raimundo Egídio
+  - Edinaldo Andrade
+  - Mirelle de Almeida
 
 ## 📂 Instruções do Projeto :
+### Para ambientes de Desenvolvimento:
 1.Ambiente de Desenvolvimento:
 
 - Utilize Visual Studio Code ou um editor de código equivalente.
@@ -25,6 +34,11 @@
      npm install
      ```
  - Certifique-se de que o NodeModules esteja instalado corretamente para garantir que todas as bibliotecas necessárias estejam disponíveis.
+
+## 📱Ambiente de Produção:
+- Realize o download do arquivo APK do app pressionando o botão abaixo
+<a href="https://github.com/Unifacs-Portfolio/eng-box-app/releases/download/1.0.0/application-4d07c5d1-3464-4bb4-9f11-e9682983e8a5.apk" download>
+    <img src="https://img.shields.io/badge/Download-APK-blue.svg" alt="Baixar APK" width="150">
    
 ## 👨🏻‍💻 Beneficios do Projeto :
 - Incentivar a conscientização e educação dos engenheiros sobre práticas sustentáveis no dia a dia.
