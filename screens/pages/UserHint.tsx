@@ -1,23 +1,34 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, ActivityIndicator, Alert, TouchableOpacity } from 'react-native';
-import { getApiAxios } from '../../services/axios';
-import Icon from 'react-native-vector-icons/Ionicons';
-import GoBackButton from './../../Components/GoBackButton';
-import { Especialist } from '../../utils/types/post';
+import React, { useEffect, useState } from "react";
+import {
+  View,
+  Text,
+  FlatList,
+  ActivityIndicator,
+  Alert,
+  TouchableOpacity,
+} from "react-native";
+import { getApiAxios } from "../../services/axios";
+import Icon from "react-native-vector-icons/Ionicons";
+import GoBackButton from "./../../Components/GoBackButton";
+import { Dica, Dicas, Especialist } from "../../utils/types/post";
+import { useUser } from "../../Components/profile/UserContext";
 
 const UserHint = () => {
-  const [hints, setHints] = useState([]);
+  const [hints, setHints] = useState<Dica[]>();
   const [loading, setLoading] = useState(false);
+  const { userProfile } = useUser();
 
-  const fetchHints = async (userEmail: string) => {
+  const fetchHints = async () => {
     try {
       setLoading(true);
       const api = await getApiAxios();
-      const response = await api.get('/api/Enge/dicas'); 
-      const userHints = response.data.filter((hint: Especialist) => hint.usuarioId === userEmail);
+      const { data } = await api.get<Dicas>("/api/Enge/dicas");
+      const userHints = data.dicas.filter(
+        (hint: Dica) => hint.usuarioId === userProfile.id
+      );
       setHints(userHints);
     } catch (error) {
-      console.error('Erro ao buscar dicas:', error);
+      console.error("Erro ao buscar dicas:", error);
     } finally {
       setLoading(false);
     }
@@ -29,12 +40,13 @@ const UserHint = () => {
       await api.delete(`/api/dicas/${dicaId}`);
       // Atualizar a lista de dicas após a exclusão
       setHints((prevHints) => prevHints.filter((hint) => hint.id !== dicaId));
-      Alert.alert('Dica deletada')
+      Alert.alert("Dica deletada");
     } catch (error) {
-      Alert.alert('Erro ao deletar dica');
+      Alert.alert("Erro ao deletar dica");
     }
   };
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     fetchHints();
   }, []);
@@ -44,7 +56,7 @@ const UserHint = () => {
       <View className="bg-white w-[100%] p-4 rounded-lg shadow mb-2 mt-2">
         <Text
           className="font-bold mb-2 text-lg text-[#4A4A4A]"
-          style={{ fontFamily: 'poppins-medium' }}
+          style={{ fontFamily: "poppins-medium" }}
         >
           {item.titulo}
         </Text>
@@ -55,7 +67,7 @@ const UserHint = () => {
         </View>
         <Text
           className="text-[#4A4A4A] text-sm"
-          style={{ fontFamily: 'poppins-medium', opacity: 0.7 }}
+          style={{ fontFamily: "poppins-medium", opacity: 0.7 }}
         >
           {item.conteudo}
         </Text>
@@ -69,7 +81,7 @@ const UserHint = () => {
       <View className="items-center mb-10">
         <Text
           className="font-bold text-lg text-[#4A4A4A]"
-          style={{ fontFamily: 'poppins-medium' }}
+          style={{ fontFamily: "poppins-medium" }}
         >
           Suas Dicas
         </Text>
@@ -87,11 +99,14 @@ const UserHint = () => {
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{ paddingBottom: 200 }}
           ListEmptyComponent={
-            <View className='items-center justify-center mt-16'>
-                <Text className="text-[#4A4A4A] text-sm" style={{ fontFamily: 'poppins-medium', opacity: 0.7 }}>
+            <View className="items-center justify-center mt-16">
+              <Text
+                className="text-[#4A4A4A] text-sm"
+                style={{ fontFamily: "poppins-medium", opacity: 0.7 }}
+              >
                 Nenhuma dica encontrada.
-                </Text>
-              </View>
+              </Text>
+            </View>
           }
         />
       )}

@@ -1,6 +1,6 @@
 export enum TabRoutes {
-	HOME = 'Home',
-	EXPLORE = 'Explore',
-	UPLOAD = 'Upload',
-	PROFILE = 'Profile',
+  HOME = "TabHome",
+  EXPLORE = "TabExplore",
+  UPLOAD = "TabUpload",
+  PROFILE = "TabProfile",
 }
