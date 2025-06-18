@@ -10,6 +10,7 @@ import { UserProfile } from "../../utils/types/UserProfile";
 import { UserResponse } from "../../utils/types/user-response";
 import { decryptToken, getToken } from "../../utils/session/manager";
 import { getApiAxios } from "../../services/axios";
+import axios from "axios";
 
 interface UserContextProps {
   userProfile: UserResponse;
@@ -32,7 +33,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
       const payloadToken = await decryptToken(token);
       if (!payloadToken) return;
       const axios = await getApiAxios();
-      const { data } = await axios.get(`/api/usuario/${payloadToken.userID}`);
+      const { data } = await axios.get(`/api/usuario/${payloadToken.userId}`);
 
       const userFormated: UserResponse = {
         id: data.user.id,
@@ -54,6 +55,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     try {
       const axios = await getApiAxios();
       const { data } = await axios.get(`/api/usuario/${userId}`);
+      console.log(data);
       return data.user;
     } catch (error: any) {
       // console.error("Erro inesperado: ", error);

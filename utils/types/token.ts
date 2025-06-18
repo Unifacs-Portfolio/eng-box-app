@@ -8,5 +8,5 @@ export type TokenResponse = {
 export type TokenData = JwtPayload & {
   email: string;
   iat: string;
-  userID: string;
+  userId: string;
 };

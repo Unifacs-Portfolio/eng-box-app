@@ -41,7 +41,7 @@ const Profile = () => {
       //   );
 
       const newsPosts = data.receitas.filter(
-        (post) => post.usuarioId === payloadToken.userID
+        (post) => post.usuarioId === payloadToken.userId
       );
 
       setUserPostagens(newsPosts);
