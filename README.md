@@ -37,7 +37,7 @@
 
 ## 📱Ambiente de Produção:
 - Realize o download do arquivo APK do app pressionando o botão abaixo
-<a href="https://github.com/Unifacs-Portfolio/eng-box-app/releases/download/1.0.0/application-4d07c5d1-3464-4bb4-9f11-e9682983e8a5.apk" download>
+<a href="https://github.com/Unifacs-Portfolio/eng-box-app/releases/download/1.0.1/application-d6306f68-2fc8-445d-a784-28e160b23c59.apk" download>
     <img src="https://img.shields.io/badge/Download-APK-blue.svg" alt="Baixar APK" width="150">
    
 ## 👨🏻‍💻 Beneficios do Projeto :
